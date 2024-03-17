@@ -57,6 +57,12 @@ curl -sS https://dl.yarnpkg.com/stable-install.sh | sh
 echo "Installing Go..."
 brew install go
 
+brew install gofumpt
+brew install lazygit
+brew install ripgrep
+brew install fzf
+brew install tmux
+
 # Install Docker and Docker Compose plugin
 echo "Installing Docker..."
 brew install docker docker-compose
