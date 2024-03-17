@@ -33,6 +33,10 @@ fi
 echo "Updating Homebrew..."
 brew update
 
+# install nerd fonts
+brew tap homebrew/cask-fonts
+brew search '/font-.*-nerd-font/' | awk '{ print $1 }' | xargs -I{} brew install --cask {} || true
+
 # Install core development tools (needed for some installations)
 echo "Installing development tools..."
 brew install openssl readline sqlite3 xz
