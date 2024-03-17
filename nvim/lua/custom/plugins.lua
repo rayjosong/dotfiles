@@ -19,6 +19,13 @@ local plugins = {
         "eslint-lsp",
         "eslint",
         "prettier",
+        "python-lsp-server",
+        "reoder-python-imports",
+        "prisma-language-server",
+        "lua-language-server",
+        "markdown-toc",
+        "mdformat",
+        "markdownlint",
       }
     }
   },
