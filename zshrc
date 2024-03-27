@@ -60,6 +60,9 @@ load-nvmrc() {
 type -a nvm > /dev/null && add-zsh-hook chpwd load-nvmrc
 type -a nvm > /dev/null && load-nvmrc
 
+export PATH="$HOME/.tmuxifier/bin:$PATH"
+eval "$(tmuxifier init -)"
+
 # Rails and Ruby uses the local `bin` folder to store binstubs.
 # So instead of running `bin/rails` like the doc says, just run `rails`
 # Same for `./node_modules/.bin` and nodejs
@@ -107,10 +110,12 @@ go env -w GOPRIVATE="github.com/deliveryhero/*"
 export GOPATH=$HOME/go
 export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
 
-# gvm use go1.19 --default
+# gvm use go1.20
 
 # Flutter
 # export PATH="$PATH:[PATH_OF_FLUTTER_GIT_DIRECTORY]/bin"
 
 
 [[ -s "/Users/r.ong.4/.gvm/scripts/gvm" ]] && source "/Users/r.ong.4/.gvm/scripts/gvm"
+
+[[ -s "/Users/raymondong/.gvm/scripts/gvm" ]] && source "/Users/raymondong/.gvm/scripts/gvm"
