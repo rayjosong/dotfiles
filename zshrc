@@ -60,6 +60,7 @@ load-nvmrc() {
 type -a nvm > /dev/null && add-zsh-hook chpwd load-nvmrc
 type -a nvm > /dev/null && load-nvmrc
 
+# tmuxifier
 export PATH="$HOME/.tmuxifier/bin:$PATH"
 eval "$(tmuxifier init -)"
 
@@ -76,7 +77,7 @@ export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 
 export BUNDLER_EDITOR=code
-export EDITOR=code
+export EDITOR=nvim
 
 source ~/code/rayjosong/dotfiles/.env
 # # github token
@@ -99,6 +100,7 @@ done
 
 # aliases
 alias vim=nvim
+alias tmxf=tmuxifier
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
@@ -119,3 +121,4 @@ export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
 [[ -s "/Users/r.ong.4/.gvm/scripts/gvm" ]] && source "/Users/r.ong.4/.gvm/scripts/gvm"
 
 [[ -s "/Users/raymondong/.gvm/scripts/gvm" ]] && source "/Users/raymondong/.gvm/scripts/gvm"
+source $(brew --prefix)/share/zsh-history-substring-search/zsh-history-substring-search.zsh
