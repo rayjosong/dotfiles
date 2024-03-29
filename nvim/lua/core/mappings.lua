@@ -18,10 +18,16 @@ M.general = {
   n = {
     ["<Esc>"] = { ":noh <CR>", "Clear highlights" },
     -- switch between windows
-    ["<C-h>"] = { "<C-w>h", "Window left" },
-    ["<C-l>"] = { "<C-w>l", "Window right" },
-    ["<C-j>"] = { "<C-w>j", "Window down" },
-    ["<C-k>"] = { "<C-w>k", "Window up" },
+    -- ["<C-h>"] = { "<C-w>h", "Window left" },
+    -- ["<C-l>"] = { "<C-w>l", "Window right" },
+    -- ["<C-j>"] = { "<C-w>j", "Window down" },
+    -- ["<C-k>"] = { "<C-w>k", "Window up" },
+
+    -- Navigate vim panes better
+    ["<C-k>"] = {":wincmd k<CR>"},
+    ["<C-j>"] = {":wincmd j<CR>"},
+    ["<C-h>"] = {":wincmd h<CR>"},
+    ["<C-l>"] = {":wincmd l<CR>"},
 
     -- save
     ["<C-s>"] = { "<cmd> w <CR>", "Save file" },

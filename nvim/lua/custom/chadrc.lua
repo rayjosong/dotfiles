@@ -2,7 +2,7 @@
 local M = {}
 
 M.ui = {
-  theme = 'tokyodark',
+  theme = 'ayu_dark',
   cmp = {
     icons = true,
     lspkind_text = true,

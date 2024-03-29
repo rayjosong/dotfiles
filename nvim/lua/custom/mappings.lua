@@ -98,6 +98,17 @@ M.codeshot = {
   }
 }
 
+
+M.vim_tmux_navigator = {
+  plugin = true,
+  n = {
+    ["<C-h>"] = {":TmuxNavigateLeft<CR>", "Move to left pane tmux"},
+    ["<C-j>"] = {":TmuxNavigateDown<CR>", "Move to down pane tmux"},
+    ["<C-k>"] = {":TmuxNavigateUp<CR>", "Move to up pane tmux"},
+    ["<C-l>"] = {":TmuxNavigateRight<CR>", "Move to right pane tmux"},
+  }
+}
+
 M.gitlinker = {
   plugin = true,
   n = {
