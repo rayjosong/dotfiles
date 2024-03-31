@@ -98,13 +98,25 @@ local plugins = {
       require "custom.configs.lint"
     end
   },
+  -- {
+  --   "rcarriga/nvim-notify",
+  --   lazy = false,
+  --   config = function ()
+  --     vim.opt.termguicolors = true
+  --     vim.notify = require("notify")
+  --   end
+  -- },
   {
-    "rcarriga/nvim-notify",
-    lazy = false,
+    "folke/noice.nvim",
+    event = "VeryLazy",
+    ops = {},
     config = function ()
-      vim.opt.termguicolors = true
-      vim.notify = require("notify")
-    end
+      require("custom.configs.noice").setup()
+    end,
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+      "rcarriga/nvim-notify",
+    }
   },
   {
     "ruifm/gitlinker.nvim",
@@ -252,9 +264,12 @@ local plugins = {
     "christoomey/vim-tmux-navigator",
     lazy = false,
     config = function ()
-      require("core.utils").load_mappings("vim-tmux-navigator")
+      require("core.utils").load_mappings("vim_tmux_navigator")
     end
-  }
+  },
+  {
+    -- "vim-test/vim-test",
+  },
 }
 
 return plugins
