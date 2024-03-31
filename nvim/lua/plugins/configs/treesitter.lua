@@ -1,5 +1,6 @@
 local options = {
-  ensure_installed = { "lua", "go", "typescript", "html", "css", "python", "tsx", "javascript", "ruby", "rust" },
+  ensure_installed = { "lua", "go", "typescript", "dockerfile", "html", "css", "python", "markdown", "markdown_inline", "tsx", "javascript", "ruby", "rust", "sql", "yaml", "json", "bash", "gitignore", "prisma" },
+
 
   highlight = {
     enable = true,
@@ -7,6 +8,7 @@ local options = {
   },
 
   indent = { enable = true },
+
 }
 
 return options

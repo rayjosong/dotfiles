@@ -76,6 +76,10 @@ local default_plugins = {
     init = function()
       require("core.utils").lazy_load "nvim-treesitter"
     end,
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter-textobjects"
+    },
+    event = {"BufReadPre", "BufNewFile"},
     cmd = { "TSInstall", "TSBufEnable", "TSBufDisable", "TSModuleInfo" },
     build = ":TSUpdate",
     opts = function()
@@ -85,6 +89,16 @@ local default_plugins = {
       dofile(vim.g.base46_cache .. "syntax")
       require("nvim-treesitter.configs").setup(opts)
     end,
+  },
+  {
+    "nvim-treesitter/nvim-treesitter-textobjects",
+    lazy = true,
+    ops = function ()
+      return require "plugins.configs.nvim-treesitter-textobjects"
+    end,
+    config= function(_, opts)
+      require("nvim-treesitter.configs").setup(opts)
+    end
   },
 
   -- git stuff
