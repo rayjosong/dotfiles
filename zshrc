@@ -99,6 +99,8 @@ EOF
 done
 
 # aliases
+alias oo='cd $HOME/Library/Mobile\ Documents/iCloud\~md\~obsidian/Documents/Personal\ Vault/'
+alias ofp='cd $HOME/Library/Mobile\ Documents/iCloud\~md\~obsidian/Documents/foodpanda/'
 alias vim=nvim
 alias tmxf=tmuxifier
 
