@@ -8,7 +8,7 @@ obsidian.setup({
     -- },
     {
       name = "work",
-      path = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Sync Vault",
+      path = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/foodpanda/",
     },
     {
       name = "personal",
@@ -19,6 +19,16 @@ obsidian.setup({
       subdir = "$templates",
       date_format = "%Y-%m-%d-%a",
       time_format = "%H:%M",
+  },
+  daily_notes = {
+    -- Optional, if you keep daily notes in a separate directory.
+    folder = "$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/foodpanda/$dailies",
+    -- Optional, if you want to change the date format for the ID of daily notes.
+    date_format = "%Y-%m-%d",
+    -- Optional, if you want to change the date format of the default alias of daily notes.
+    alias_format = "%B %-d, %Y",
+    -- Optional, if you want to automatically insert a template from your template directory like 'daily.md'
+    template = "$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/foodpanda/$templates/daily-note.md"
   },
   disable_frontmatter = true,
   ui = {
