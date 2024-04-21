@@ -15,6 +15,12 @@ obsidian.setup({
       path = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal Vault/",
     },
   },
+  templates = {
+      subdir = "$templates",
+      date_format = "%Y-%m-%d-%a",
+      time_format = "%H:%M",
+  },
+  disable_frontmatter = true,
   ui = {
     enable = true,
     checkboxes = {

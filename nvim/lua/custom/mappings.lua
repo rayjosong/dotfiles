@@ -184,4 +184,12 @@ M.neotest = {
   }
 }
 
+M.obsidian = {
+  plugin = true,
+  n = {
+    ["<leader>on"] = {":ObsidianNew<CR>", "Creating new note"},
+    ["<leader>ot"] = {":ObsidianTemplate<CR>", "Insert template"},
+  }
+}
+
 return M

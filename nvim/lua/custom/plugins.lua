@@ -246,6 +246,7 @@ local plugins = {
     ft = "markdown",
     config = function ()
       require("custom.configs.obsidian")
+      require("core.utils").load_mappings("obsidian")
     end,
     dependencies = {
       -- Required.
