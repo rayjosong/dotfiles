@@ -189,6 +189,7 @@ M.obsidian = {
   n = {
     ["<leader>on"] = {":ObsidianNew<CR>", "Creating new note"},
     ["<leader>ot"] = {":ObsidianTemplate<CR>", "Insert template"},
+    ["<leader>oo"] = {":ObsidianOpen<CR>", "Open Obsidian in GUI"},
   }
 }
 
