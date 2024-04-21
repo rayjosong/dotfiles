@@ -98,14 +98,16 @@ local plugins = {
       require "custom.configs.lint"
     end
   },
-  -- {
-  --   "rcarriga/nvim-notify",
-  --   lazy = false,
-  --   config = function ()
-  --     vim.opt.termguicolors = true
-  --     vim.notify = require("notify")
-  --   end
-  -- },
+  {
+    "rcarriga/nvim-notify",
+    lazy = false,
+    config = function ()
+      vim.opt.termguicolors = true
+      vim.notify = require("notify").setup({
+        opacity = 20
+      })
+    end
+  },
   {
     "folke/noice.nvim",
     event = "VeryLazy",
@@ -115,7 +117,7 @@ local plugins = {
     end,
     dependencies = {
       "MunifTanjim/nui.nvim",
-      "rcarriga/nvim-notify",
+      -- "rcarriga/nvim-notify",
     }
   },
   {
@@ -227,39 +229,29 @@ local plugins = {
       { "[[", desc = "Prev Reference" },
     },
   },
-  -- {
-  --   "epwalsh/obsidian.nvim",
-  --   version = "*",  -- recommended, use latest release instead of latest commit
-  --   lazy = true,
-  --   ft = "markdown",
-  --   -- Replace the above line with this if you only want to load obsidian.nvim for markdown files in your vault:
-  --   -- event = {
-  --   --   -- If you want to use the home shortcut '~' here you need to call 'vim.fn.expand'.
-  --   --   -- E.g. "BufReadPre " .. vim.fn.expand "~" .. "/my-vault/**.md"
-  --   --   "BufReadPre path/to/my-vault/**.md",
-  --   --   "BufNewFile path/to/my-vault/**.md",
-  --   -- },
-  --   dependencies = {
-  --     -- Required.
-  --     "nvim-lua/plenary.nvim",
-  --
-  --     -- see below for full list of optional dependencies 👇
-  --   },
-  --   opts = {
-  --     workspaces = {
-  --       {
-  --         name = "personal",
-  --         path = "~/vaults/personal",
-  --       },
-  --       {
-  --         name = "work",
-  --         path = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Sync Vault",
-  --       },
-  --     },
-  --
-  --     -- see below for full list of options 👇
-  --   },
-  -- },
+  {
+    "kylechui/nvim-surround",
+    version = "*", -- Use for stability; omit to use `main` branch for the latest features
+    event = "VeryLazy",
+    config = function()
+      require("nvim-surround").setup({
+        -- Configuration here, or leave empty to use defaults
+      })
+    end
+  },
+  {
+    "epwalsh/obsidian.nvim",
+    version = "*",  -- recommended, use latest release instead of latest commit
+    lazy = true,
+    ft = "markdown",
+    config = function ()
+      require("custom.configs.obsidian")
+    end,
+    dependencies = {
+      -- Required.
+      "nvim-lua/plenary.nvim",
+    },
+  },
   {
     "christoomey/vim-tmux-navigator",
     lazy = false,
@@ -270,6 +262,25 @@ local plugins = {
   {
     -- "vim-test/vim-test",
   },
+  {
+    "bullets-vim/bullets.vim",
+    ft = "markdown",
+  },
+  {
+    "richardbizik/nvim-toc",
+    ft = "markdown",
+    config = function ()
+      require('nvim-toc').setup({
+        toc_header = "Table of Contents"
+      })
+      require("core.utils").load_mappings("nvim_toc")
+    end
+  },
+  {
+    "mg979/vim-visual-multi",
+    event = "BufReadPost",
+  }
+
 }
 
 return plugins

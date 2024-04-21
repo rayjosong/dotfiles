@@ -34,6 +34,18 @@ M.dap_go = {
   }
 }
 
+M.nvim_toc = {
+  plugin = true,
+  n = {
+    ["<leader>toc"] = {
+      function ()
+        require("nvim-toc").generate_md_toc("list")
+      end,
+      "Create table of content (lists)"
+    }
+  }
+}
+
 M.gopher = {
   plugin = true,
   n = {
@@ -41,9 +53,9 @@ M.gopher = {
       "<cmd> GoTagAdd json <CR>",
       "Add json struct tags"
     },
-    ["<leader>gsy"] = {
-      "<cmd> GoTagAdd yaml <CR>",
-      "Add yaml struct tags"
+    ["<leader>gie"] = {
+      "<cmd> GoIfErr <CR>",
+      "Generate go if err block"
     }
   }
 }
