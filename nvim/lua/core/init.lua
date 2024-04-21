@@ -28,6 +28,7 @@ vim.keymap.set("v", "<leader>y", "\"+y")
 vim.keymap.set("n", "<leader>Y", "\"+Y")
 
 -------------------------------------- options ------------------------------------------
+opt.conceallevel = 2
 opt.laststatus = 3 -- global statusline
 opt.showmode = false
 
