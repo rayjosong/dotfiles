@@ -117,7 +117,7 @@ go env -w GOPRIVATE="github.com/deliveryhero/*"
 export GOPATH=$HOME/go
 export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
 
-# gvm use go1.20
+gvm use go1.20
 
 # Flutter
 # export PATH="$PATH:[PATH_OF_FLUTTER_GIT_DIRECTORY]/bin"
