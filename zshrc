@@ -104,6 +104,7 @@ alias ofp='cd $HOME/Library/Mobile\ Documents/iCloud\~md\~obsidian/Documents/foo
 alias ppg='cd $HOME/code/deliveryhero/pd-pablo-payment-gateway/'
 alias pac='cd $HOME/code/deliveryhero/pd-app-config/'
 alias df='cd $HOME/code/rayjosong/dotfiles/'
+alias lg='lazygit'
 
 alias vim=nvim
 alias tmxf=tmuxifier
