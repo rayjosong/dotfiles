@@ -76,7 +76,7 @@ export PATH="./bin:./node_modules/.bin:${PATH}:/usr/local/sbin"
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 
-export BUNDLER_EDITOR=code
+export BUNDLER_EDITOR=nvim
 export EDITOR=nvim
 
 source ~/code/rayjosong/dotfiles/.env
@@ -103,6 +103,7 @@ alias oo='cd $HOME/Library/Mobile\ Documents/iCloud\~md\~obsidian/Documents/Pers
 alias ofp='cd $HOME/Library/Mobile\ Documents/iCloud\~md\~obsidian/Documents/foodpanda/'
 alias ppg='cd $HOME/code/deliveryhero/pd-pablo-payment-gateway/'
 alias pac='cd $HOME/code/deliveryhero/pd-app-config/'
+alias df='cd $HOME/code/rayjosong/dotfiles/'
 
 alias vim=nvim
 alias tmxf=tmuxifier
@@ -117,7 +118,6 @@ go env -w GOPRIVATE="github.com/deliveryhero/*"
 export GOPATH=$HOME/go
 export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
 
-# gvm use go1.20
 
 # Flutter
 # export PATH="$PATH:[PATH_OF_FLUTTER_GIT_DIRECTORY]/bin"
