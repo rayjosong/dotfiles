@@ -127,3 +127,13 @@ export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
 
 [[ -s "/Users/raymondong/.gvm/scripts/gvm" ]] && source "/Users/raymondong/.gvm/scripts/gvm"
 source $(brew --prefix)/share/zsh-history-substring-search/zsh-history-substring-search.zsh
+
+# bun completions
+[ -s "/Users/raymondong/.bun/_bun" ] && source "/Users/raymondong/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# Created by `pipx` on 2024-06-15 03:50:49
+export PATH="$PATH:/Users/raymondong/.local/bin"

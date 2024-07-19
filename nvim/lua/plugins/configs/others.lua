@@ -25,6 +25,8 @@ M.blankline = {
 M.luasnip = function(opts)
   require("luasnip").config.set_config(opts)
 
+  require("luasnip").filetype_extend("javascriptreact", {"html"})
+
   -- vscode format
   require("luasnip.loaders.from_vscode").lazy_load()
   require("luasnip.loaders.from_vscode").lazy_load { paths = vim.g.vscode_snippets_path or "" }
