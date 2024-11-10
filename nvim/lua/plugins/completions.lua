@@ -31,6 +31,11 @@ return {
           ["<C-Space>"] = cmp.mapping.complete(),
           ["<C-e>"] = cmp.mapping.abort(),
           ["<CR>"] = cmp.mapping.confirm({ select = true }),
+<<<<<<< Updated upstream
+=======
+          ["<Tab>"] = cmp.mapping.select_next_item(),
+          ["<S-Tab>"] = cmp.mapping.select_prev_item(),
+>>>>>>> Stashed changes
         }),
         sources = cmp.config.sources({
           { name = "nvim_lsp" },
