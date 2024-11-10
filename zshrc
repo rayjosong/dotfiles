@@ -99,11 +99,14 @@ EOF
 done
 
 # aliases
-alias oo='cd $HOME/Library/Mobile\ Documents/iCloud\~md\~obsidian/Documents/Personal\ Vault/'
-alias ofp='cd $HOME/Library/Mobile\ Documents/iCloud\~md\~obsidian/Documents/foodpanda/'
-alias ppg='cd $HOME/code/deliveryhero/pd-pablo-payment-gateway/'
-alias pac='cd $HOME/code/deliveryhero/pd-app-config/'
-alias df='cd $HOME/code/rayjosong/dotfiles/'
+alias cdoo='cd $HOME/Library/Mobile\ Documents/iCloud\~md\~obsidian/Documents/Personal\ Vault/'
+alias cdofp='cd $HOME/Library/Mobile\ Documents/iCloud\~md\~obsidian/Documents/foodpanda/'
+alias cdppg='cd $HOME/code/deliveryhero/pd-pablo-payment-gateway/'
+alias cdpac='cd $HOME/code/deliveryhero/pd-app-config/'
+alias cdiac='cd $HOME/code/deliveryhero/pd-automation-iac/'
+alias cdpit='cd $HOME/code/deliveryhero/pd-infra-terraform/'
+alias cddf='cd $HOME/code/rayjosong/dotfiles/'
+alias cdnvim='cd $HOME/.config/nvim'
 alias lg='lazygit'
 
 alias vim=nvim
