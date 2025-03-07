@@ -170,17 +170,16 @@ local plugins = {
       return true
     end
   },
-  {
-    'nvimdev/dashboard-nvim',
-    event = 'VimEnter',
-    config = function()
-      require('dashboard').setup {
-        theme = 'hyper',
-        config = require("custom.configs.dashboard")
-      }
-    end,
-    dependencies = { {'nvim-tree/nvim-web-devicons'}}
-  },
+  -- {
+  --   'nvimdev/dashboard-nvim',
+  --   event = 'VimEnter',
+  --   config = function()
+  --     require('dashboard').setup {
+  --       config = require("custom.configs.dashboard")
+  --     }
+  --   end,
+  --   dependencies = { {'nvim-tree/nvim-web-devicons'}}
+  -- },
   -- FIX: has some issues in codeshot/options:22. to await fix
   -- {
   --   "SergioRibera/codeshot.nvim",

@@ -19,6 +19,7 @@ lspconfig.gopls.setup {
       },
       gofumpt = false,
       staticcheck = true,
+      memoryMode = "Large", -- experimental: it helps with large projects
     }
   }
 }
