@@ -109,6 +109,8 @@ alias lg='lazygit'
 alias vim=nvim
 alias tmxf=tmuxifier
 
+alias sd="cd ~ && cd \$(find * -type d | fzf)"
+
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
@@ -138,3 +140,9 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 
 # Created by `pipx` on 2024-06-15 03:50:49
 export PATH="$PATH:/Users/raymondong/.local/bin"
+
+eval "$(zoxide init zsh)"
+
+cz() {
+    dir=$(dirname "$(fzf)") && [[ -n "$dir" ]] && z "$dir"
+}
