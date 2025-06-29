@@ -59,7 +59,7 @@ local plugins = {
     "nvimtools/none-ls.nvim",
     event = "VeryLazy",
     ft = "go, js",
-    opts = function ()
+    config = function ()
       return require "custom.configs.none-ls"
     end,
   },
