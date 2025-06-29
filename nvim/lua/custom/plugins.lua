@@ -60,7 +60,7 @@ local plugins = {
     event = "VeryLazy",
     ft = "go, js",
     opts = function ()
-      return require "custom.configs.null-ls"
+      return require "custom.configs.none-ls"
     end,
   },
   {
