@@ -281,7 +281,40 @@ local plugins = {
   {
     "mg979/vim-visual-multi",
     event = "BufReadPost",
-  }
+  },
+  -- NOTE: favour octo.nvim over gh.nvim
+  -- {
+  --   "pwntester/octo.nvim",
+  --   dependencies = {
+  --     "nvim-lua/plenary.nvim",
+  --     "nvim-telescope/telescope.nvim",
+  --     "nvim-tree/nvim-web-devicons",
+  --   },
+  --   event = "BufReadPost",
+  --   config = function ()
+  --     require("custom.configs.octo")
+  --
+  --     -- require("core.utils").load_mappings("octo")
+  --   end
+  -- },
+  -- {
+  --   "ldelossa/gh.nvim",
+  --   event = "BufReadPost",
+  --   dependencies = {
+  --     {
+  --       "ldelossa/litee.nvim",
+  --       config = function()
+  --         require("litee.lib").setup()
+  --       end,
+  --     },
+  --   },
+  --   config = function()
+  --     require("custom.configs.gh")
+  --   end,
+  -- }
+  --
+  --
+
 
 }
 
