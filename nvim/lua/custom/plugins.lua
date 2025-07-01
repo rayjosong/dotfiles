@@ -56,11 +56,11 @@ local plugins = {
     end,
   },
   {
-    "jose-elias-alvarez/null-ls.nvim",
+    "nvimtools/none-ls.nvim",
     event = "VeryLazy",
-    ft = "go, js, ts",
-    opts = function ()
-      return require "custom.configs.null-ls"
+    ft = "go, js",
+    config = function ()
+      return require "custom.configs.none-ls"
     end,
   },
   {
@@ -170,17 +170,16 @@ local plugins = {
       return true
     end
   },
-  {
-    'nvimdev/dashboard-nvim',
-    event = 'VimEnter',
-    config = function()
-      require('dashboard').setup {
-        theme = 'hyper',
-        config = require("custom.configs.dashboard")
-      }
-    end,
-    dependencies = { {'nvim-tree/nvim-web-devicons'}}
-  },
+  -- {
+  --   'nvimdev/dashboard-nvim',
+  --   event = 'VimEnter',
+  --   config = function()
+  --     require('dashboard').setup {
+  --       config = require("custom.configs.dashboard")
+  --     }
+  --   end,
+  --   dependencies = { {'nvim-tree/nvim-web-devicons'}}
+  -- },
   -- FIX: has some issues in codeshot/options:22. to await fix
   -- {
   --   "SergioRibera/codeshot.nvim",
@@ -194,42 +193,42 @@ local plugins = {
 
 
   -- TODO: refactor these!!!!!
-  {
-    "RRethy/vim-illuminate",
-    event = { "BufReadPost", "BufWritePost", "BufNewFile" },
-    opts = {
-      delay = 50,
-      large_file_cutoff = 2000,
-      large_file_overrides = {
-        providers = { "lsp" },
-      },
-    },
-    config = function(_, opts)
-      require("illuminate").configure(opts)
-
-      local function map(key, dir, buffer)
-        vim.keymap.set("n", key, function()
-          require("illuminate")["goto_" .. dir .. "_reference"](false)
-        end, { desc = dir:sub(1, 1):upper() .. dir:sub(2) .. " Reference", buffer = buffer })
-      end
-
-      map("]]", "next")
-      map("[[", "prev")
-
-      -- also set it after loading ftplugins, since a lot overwrite [[ and ]]
-      vim.api.nvim_create_autocmd("FileType", {
-        callback = function()
-          local buffer = vim.api.nvim_get_current_buf()
-          map("]]", "next", buffer)
-          map("[[", "prev", buffer)
-        end,
-      })
-    end,
-    keys = {
-      { "]]", desc = "Next Reference" },
-      { "[[", desc = "Prev Reference" },
-    },
-  },
+  -- {
+  --   "RRethy/vim-illuminate",
+  --   event = { "BufReadPost", "BufWritePost", "BufNewFile" },
+  --   opts = {
+  --     delay = 50,
+  --     large_file_cutoff = 2000,
+  --     large_file_overrides = {
+  --       providers = { "lsp" },
+  --     },
+  --   },
+  --   config = function(_, opts)
+  --     require("illuminate").configure(opts)
+  --
+  --     local function map(key, dir, buffer)
+  --       vim.keymap.set("n", key, function()
+  --         require("illuminate")["goto_" .. dir .. "_reference"](false)
+  --       end, { desc = dir:sub(1, 1):upper() .. dir:sub(2) .. " Reference", buffer = buffer })
+  --     end
+  --
+  --     map("]]", "next")
+  --     map("[[", "prev")
+  --
+  --     -- also set it after loading ftplugins, since a lot overwrite [[ and ]]
+  --     vim.api.nvim_create_autocmd("FileType", {
+  --       callback = function()
+  --         local buffer = vim.api.nvim_get_current_buf()
+  --         map("]]", "next", buffer)
+  --         map("[[", "prev", buffer)
+  --       end,
+  --     })
+  --   end,
+  --   keys = {
+  --     { "]]", desc = "Next Reference" },
+  --     { "[[", desc = "Prev Reference" },
+  --   },
+  -- },
   {
     "kylechui/nvim-surround",
     version = "*", -- Use for stability; omit to use `main` branch for the latest features
@@ -315,7 +314,22 @@ local plugins = {
   --
   --
 
-
+  {
+    "windwp/nvim-ts-autotag",
+    ft = {"javascript", "typescript", "javascriptreact", "typescriptreact"},
+    config = function ()
+      require("nvim-ts-autotag").setup({
+        autotag = {
+          enable = true,
+          enable_renamme = true,
+          enable_close = true,
+          enable_close_on_slash = true,
+          filetypes = {"html", "jsx", "tsx", "javascript", "typescript", "javascriptreact", "typescriptreact"}
+        }
+      })
+    end
+  }
 }
+
 
 return plugins

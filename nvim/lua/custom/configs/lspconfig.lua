@@ -19,16 +19,7 @@ lspconfig.gopls.setup {
       },
       gofumpt = false,
       staticcheck = true,
-    }
-  }
-}
-
-lspconfig.tsserver.setup {
-  on_attach = on_attach,
-  capabilities = capabilities,
-  init_options = {
-    preferences = {
-      disableSuggestions = true,
+      memoryMode = "Large", -- experimental: it helps with large projects
     }
   }
 }

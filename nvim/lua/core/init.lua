@@ -38,7 +38,7 @@ opt.cursorline = true
 -- Indenting
 opt.expandtab = true
 opt.shiftwidth = 2
-opt.smartindent = true
+-- opt.smartindent = true
 opt.tabstop = 2
 opt.softtabstop = 2
 
@@ -49,6 +49,7 @@ opt.mouse = "a"
 
 -- Numbers
 opt.number = true
+opt.relativenumber = true
 opt.numberwidth = 2
 opt.ruler = false
 
