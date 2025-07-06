@@ -15,9 +15,9 @@ local plugins = {
       ensure_installed = {
         "gopls",
         "goimports",
+        "gofumpt",
         "typescript-language-server",
         "eslint-lsp",
-        "eslint",
         "prettier",
         "python-lsp-server",
         "reoder-python-imports",
@@ -26,15 +26,9 @@ local plugins = {
         "markdown-toc",
         "mdformat",
         "markdownlint",
+        "stylua",
       }
     }
-  },
-  {
-    "mhartington/formatter.nvim",
-    event = "VeryLazy",
-    opts = function ()
-      return require "custom.configs.formatter"
-    end
   },
   {
     "neovim/nvim-lspconfig",
@@ -58,9 +52,10 @@ local plugins = {
   {
     "nvimtools/none-ls.nvim",
     event = "VeryLazy",
-    ft = "go, js",
-    config = function ()
-      return require "custom.configs.none-ls"
+    ft = "go, js, lua",
+    config = function()
+      local opts = require("custom.configs.none-ls")
+      require("null-ls").setup(opts)
     end,
   },
   {
