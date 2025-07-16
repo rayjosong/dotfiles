@@ -105,6 +105,10 @@ alias ppg='cd $HOME/code/deliveryhero/pd-pablo-payment-gateway/'
 alias pac='cd $HOME/code/deliveryhero/pd-app-config/'
 alias df='cd $HOME/code/rayjosong/dotfiles/'
 alias lg='lazygit'
+alias zf='cd "$(zoxide query -l | fzf)"'
+alias gpull="git pull origin $(git rev-parse --abbrev-ref HEAD)"
+alias gpush="git push origin $(git rev-parse --abbrev-ref HEAD)"
+alias ghweb="gh repo view --web --branch $(git rev-parse --abbrev-ref HEAD)"
 
 alias vim=nvim
 alias tmxf=tmuxifier
