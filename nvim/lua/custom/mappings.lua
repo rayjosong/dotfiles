@@ -5,45 +5,53 @@ M.dap = {
   n = {
     ["<leader>db"] = {
       "<cmd> DapToggleBreakpoint <CR>",
-      "Add breakpoint at line"
+      "Add breakpoint at line",
     },
     ["<leader>dus"] = {
-      function ()
-        local widgets = require("dap.ui.widgets");
-        local sidebar = widgets.sidebar(widgets.scope);
+      function()
+        local widgets = require "dap.ui.widgets"
+        local sidebar = widgets.sidebar(widgets.scope)
       end,
-    }
-  }
+    },
+  },
 }
 
 M.dap_go = {
   plugin = true,
   n = {
     ["<leader>dgt"] = {
-      function ()
+      function()
         require("dap-go").debug_test()
       end,
-      "Debug go tests"
+      "Debug go tests",
     },
     ["<leader>dgl"] = {
-      function ()
-        require('dap-go').debug_last()
+      function()
+        require("dap-go").debug_last()
       end,
-      "Debug last go test"
-    }
-  }
+      "Debug last go test",
+    },
+  },
 }
+
+-- ERROR: not sure why it doesn't work but ok
+-- M.octo = {
+--   plugin = true,
+--   n = {
+--     ["<leader>gpr"] = { ":Octo pr list<CR>", "Open PR in browser" },
+--   },
+-- }
 
 M.nvim_toc = {
   plugin = true,
   n = {
     ["<leader>toc"] = {
-      function ()
-        require("nvim-toc").generate_md_toc("list")
+      function()
+        require("nvim-toc").generate_md_toc "list"
       end,
-      "Create table of content (lists)"
-    }
-  }
+      "Create table of content (lists)",
+    },
+  },
 }
 
 M.gopher = {
@@ -51,13 +59,13 @@ M.gopher = {
   n = {
     ["<leader>gsj"] = {
       "<cmd> GoTagAdd json <CR>",
-      "Add json struct tags"
+      "Add json struct tags",
     },
     ["<leader>gie"] = {
       "<cmd> GoIfErr <CR>",
-      "Generate go if err block"
-    }
-  }
+      "Generate go if err block",
+    },
+  },
 }
 
 M.lazygit = {
@@ -65,9 +73,9 @@ M.lazygit = {
   n = {
     ["<leader>gg"] = {
       "<cmd>LazyGit<cr>",
-      "Open LazyGit"
-    }
-  }
+      "Open LazyGit",
+    },
+  },
 }
 
 M.vim_maximizer = {
@@ -75,122 +83,122 @@ M.vim_maximizer = {
   n = {
     ["<leader>sm"] = {
       "<cmd>MaximizerToggle<CR>",
-      "Maximize Window"
-    }
-  }
+      "Maximize Window",
+    },
+  },
 }
 
 M.todo_comments = {
   plugin = true,
   n = {
     ["]t"] = {
-      function ()
+      function()
         require("todo-comments").jump_next()
       end,
-      "Next todo comment"
+      "Next todo comment",
     },
     ["[t"] = {
-      function ()
+      function()
         require("todo-comments").jump_prev()
       end,
-      "Previous todo comment"
+      "Previous todo comment",
     },
     -- ["<leader>xt"] = {"<cmd>TodoTrouble<cr>", "Todo (Trouble)"},
     -- ["<leader>xT"] = {"<cmd>TodoTrouble keywords=TODO,FIX,FIXME<cr>", "Todo/Fix/Fixme (Trouble)"},
-    ["<leader>st"] = {"<cmd>TodoTelescope<cr>", "Todo"},
-    ["<leader>sT"] = {"<cmd>TodoTelescope keywords=TODO,FIX,FIXME<cr>", "Todo/Fix/Fixme"}
-  }
+    ["<leader>st"] = { "<cmd>TodoTelescope<cr>", "Todo" },
+    ["<leader>sT"] = { "<cmd>TodoTelescope keywords=TODO,FIX,FIXME<cr>", "Todo/Fix/Fixme" },
+  },
 }
 
 M.codeshot = {
   plugin = true,
   v = {
-    ["<leader>ss"] = {"<cmd>SSSelected<cr>", "Take screenshot of selected lines"},
-    ["<leader>sf"] = {"<cmd>SSFocused<cr>", "Take screenshot of file and highlight selected lines"},
-  }
+    ["<leader>ss"] = { "<cmd>SSSelected<cr>", "Take screenshot of selected lines" },
+    ["<leader>sf"] = { "<cmd>SSFocused<cr>", "Take screenshot of file and highlight selected lines" },
+  },
 }
-
 
 M.vim_tmux_navigator = {
   plugin = true,
   n = {
-    ["<C-h>"] = {":TmuxNavigateLeft<CR>", "Move to left pane tmux"},
-    ["<C-j>"] = {":TmuxNavigateDown<CR>", "Move to down pane tmux"},
-    ["<C-k>"] = {":TmuxNavigateUp<CR>", "Move to up pane tmux"},
-    ["<C-l>"] = {":TmuxNavigateRight<CR>", "Move to right pane tmux"},
-  }
+    ["<C-h>"] = { ":TmuxNavigateLeft<CR>", "Move to left pane tmux" },
+    ["<C-j>"] = { ":TmuxNavigateDown<CR>", "Move to down pane tmux" },
+    ["<C-k>"] = { ":TmuxNavigateUp<CR>", "Move to up pane tmux" },
+    ["<C-l>"] = { ":TmuxNavigateRight<CR>", "Move to right pane tmux" },
+  },
 }
 
 M.gitlinker = {
   plugin = true,
   n = {
     ["<leader>gy"] = {
-      "", "copy gitlink",
-    }
-  }
+      "",
+      "copy gitlink",
+    },
+  },
 }
 
 M.neotest = {
   plugin = true,
   n = {
     ["<leader>tt"] = {
-      function ()
-        require("neotest").run.run(vim.fn.expand("%"))
+      function()
+        require("neotest").run.run(vim.fn.expand "%")
       end,
-      "Run file"
+      "Run file",
     },
     ["<leader>tT"] = {
-      function ()
+      function()
         require("neotest").run.run(vim.loop.cwd())
       end,
-      "Run all test files"
+      "Run all test files",
     },
     ["<leader>tr"] = {
-      function ()
+      function()
         require("neotest").run.run()
       end,
-      "Run Nearest"
+      "Run Nearest",
     },
     ["<leader>tl"] = {
-      function ()
+      function()
         require("neotest").run.run_last()
       end,
-      "Run Last"
+      "Run Last",
     },
     ["<leader>ts"] = {
-      function ()
+      function()
         require("neotest").summary.toggle()
       end,
-      "Toggle Summary"
+      "Toggle Summary",
     },
     ["<leader>to"] = {
-      function ()
-        require("neotest").output.open({ enter = true, auto_close = true })
+      function()
+        require("neotest").output.open { enter = true, auto_close = true }
       end,
-      "Show Output"
+      "Show Output",
     },
     ["<leader>tO"] = {
-      function ()
+      function()
         require("neotest").output_panel.toggle()
       end,
-      "Toggle Output Panel"
+      "Toggle Output Panel",
     },
     ["<leader>tS"] = {
-      function ()
+      function()
         require("neotest").run.stop()
       end,
-      "Stop"
+      "Stop",
     },
-  }
+  },
 }
 
 M.obsidian = {
   plugin = true,
   n = {
-    ["<leader>on"] = {":ObsidianNew<CR>", "Creating new note"},
-    ["<leader>ot"] = {":ObsidianTemplate<CR>", "Insert template"},
-    ["<leader>oo"] = {":ObsidianOpen<CR>", "Open Obsidian in GUI"},
-  }
+    ["<leader>on"] = { ":ObsidianNew<CR>", "Creating new note" },
+    ["<leader>ot"] = { ":ObsidianTemplate<CR>", "Insert template" },
+    ["<leader>oo"] = { ":ObsidianOpen<CR>", "Open Obsidian in GUI" },
+  },
 }
 
 return M

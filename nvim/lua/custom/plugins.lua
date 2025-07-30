@@ -3,11 +3,11 @@ local plugins = {
     "APZelos/blamer.nvim",
     event = "VeryLazy",
     keys = "<leader>gb",
-    setup = function ()
+    setup = function()
       vim.g.blamer_enabled = 1
       vim.g.blamer_delay = 500
       vim.g.blamer_template = " %s | %s "
-    end
+    end,
   },
   {
     "williamboman/mason.nvim",
@@ -27,26 +27,26 @@ local plugins = {
         "mdformat",
         "markdownlint",
         "stylua",
-      }
-    }
+      },
+    },
   },
   {
     "neovim/nvim-lspconfig",
     config = function()
-        require "plugins.configs.lspconfig"
-        require "custom.configs.lspconfig"
+      require "plugins.configs.lspconfig"
+      require "custom.configs.lspconfig"
     end,
   },
   {
-    "mfussenegger/nvim-dap"
+    "mfussenegger/nvim-dap",
   },
   {
     "leoluz/nvim-dap-go",
     ft = "go",
     dependencies = "mfussenegger/nvim-dap",
-    config = function (_, opts)
+    config = function(_, opts)
       require("dap-go").setup(opts)
-      require("core.utils").load_mappings("dap_go")
+      require("core.utils").load_mappings "dap_go"
     end,
   },
   {
@@ -54,83 +54,83 @@ local plugins = {
     event = "VeryLazy",
     ft = "go, js, lua",
     config = function()
-      local opts = require("custom.configs.none-ls")
+      local opts = require "custom.configs.none-ls"
       require("null-ls").setup(opts)
     end,
   },
   {
     "olexsmir/gopher.nvim",
     ft = "go",
-    config = function (_, opts)
+    config = function(_, opts)
       require("gopher").setup(opts)
-      require("core.utils").load_mappings("gopher")
+      require("core.utils").load_mappings "gopher"
     end,
-    build = function ()
+    build = function()
       vim.cmd [[silent! GoInstallDeps]]
     end,
   },
   {
-      "kdheepak/lazygit.nvim",
-      event = { "BufReadPost", "BufWritePost", "BufNewFile" },
-      dependencies = {
-          "nvim-lua/plenary.nvim",
-      },
-      config = function ()
-        require("core.utils").load_mappings("lazygit")
-        -- vim.g.lazygit_floating_window_winblend = 0 -- transparency of floating window
-        -- vim.g.lazygit_floating_window_scaling_factor = 0.9 -- scaling factor for floating window
-        -- vim.g.lazygit_floating_window_border_chars = {'╭','─', '╮', '│', '╯','─', '╰', '│'} -- customize lazygit popup window border characters
-        -- vim.g.lazygit_floating_window_use_plenary = 0 -- use plenary.nvim to manage floating window if available
-        -- vim.g.lazygit_use_neovim_remote = 1 -- fallback to 0 if neovim-remote is not installed
-        --
-        -- vim.g.lazygit_use_custom_config_file_path = 0 -- config file path is evaluated if this value is 1
-      end
+    "kdheepak/lazygit.nvim",
+    event = { "BufReadPost", "BufWritePost", "BufNewFile" },
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+    },
+    config = function()
+      require("core.utils").load_mappings "lazygit"
+      -- vim.g.lazygit_floating_window_winblend = 0 -- transparency of floating window
+      -- vim.g.lazygit_floating_window_scaling_factor = 0.9 -- scaling factor for floating window
+      -- vim.g.lazygit_floating_window_border_chars = {'╭','─', '╮', '│', '╯','─', '╰', '│'} -- customize lazygit popup window border characters
+      -- vim.g.lazygit_floating_window_use_plenary = 0 -- use plenary.nvim to manage floating window if available
+      -- vim.g.lazygit_use_neovim_remote = 1 -- fallback to 0 if neovim-remote is not installed
+      --
+      -- vim.g.lazygit_use_custom_config_file_path = 0 -- config file path is evaluated if this value is 1
+    end,
   },
   {
     "mfussenegger/nvim-lint",
     event = "VeryLazy",
-    config = function ()
+    config = function()
       require "custom.configs.lint"
-    end
+    end,
   },
   {
     "rcarriga/nvim-notify",
     lazy = false,
-    config = function ()
+    config = function()
       vim.opt.termguicolors = true
-      vim.notify = require("notify").setup({
-        opacity = 20
-      })
-    end
+      vim.notify = require("notify").setup {
+        opacity = 20,
+      }
+    end,
   },
   {
     "folke/noice.nvim",
     event = "VeryLazy",
     ops = {},
-    config = function ()
+    config = function()
       require("custom.configs.noice").setup()
     end,
     dependencies = {
       "MunifTanjim/nui.nvim",
       -- "rcarriga/nvim-notify",
-    }
+    },
   },
   {
     "ruifm/gitlinker.nvim",
     lazy = false,
     dependencies = {
-      "nvim-lua/plenary.nvim"
+      "nvim-lua/plenary.nvim",
     },
-    config = function ()
+    config = function()
       require "custom.configs.gitlinker"
-    end
+    end,
   },
   {
     "szw/vim-maximizer",
     lazy = false,
     config = function()
-      require("core.utils").load_mappings("vim_maximizer")
-    end
+      require("core.utils").load_mappings "vim_maximizer"
+    end,
   },
   {
     "nvim-neotest/neotest-go",
@@ -144,26 +144,26 @@ local plugins = {
     name = "neotest",
     event = "BufEnter *_test.go",
     dependencies = {
-        "nvim-neotest/neotest-go",
-        "nvim-lua/plenary.nvim",
-        "nvim-treesitter/nvim-treesitter",
-        "antoinemadec/FixCursorHold.nvim",
-        "nvim-neotest/nvim-nio",
+      "nvim-neotest/neotest-go",
+      "nvim-lua/plenary.nvim",
+      "nvim-treesitter/nvim-treesitter",
+      "antoinemadec/FixCursorHold.nvim",
+      "nvim-neotest/nvim-nio",
     },
     config = function()
       require("custom.configs.neotest").setup()
-      require("core.utils").load_mappings("neotest")
+      require("core.utils").load_mappings "neotest"
     end,
   },
   {
     "folke/todo-comments.nvim",
     cmd = { "TodoTrouble", "TodoTelescope" },
     event = { "BufReadPost", "BufWritePost", "BufNewFile" },
-    config = function ()
+    config = function()
       require("todo-comments").setup()
-      require("core.utils").load_mappings("todo_comments")
+      require("core.utils").load_mappings "todo_comments"
       return true
-    end
+    end,
   },
   -- {
   --   'nvimdev/dashboard-nvim',
@@ -184,8 +184,6 @@ local plugins = {
   --     require("core.utils").load_mappings("codeshot")
   --   end
   -- },
-
-
 
   -- TODO: refactor these!!!!!
   -- {
@@ -229,19 +227,19 @@ local plugins = {
     version = "*", -- Use for stability; omit to use `main` branch for the latest features
     event = "VeryLazy",
     config = function()
-      require("nvim-surround").setup({
+      require("nvim-surround").setup {
         -- Configuration here, or leave empty to use defaults
-      })
-    end
+      }
+    end,
   },
   {
     "epwalsh/obsidian.nvim",
-    version = "*",  -- recommended, use latest release instead of latest commit
+    version = "*", -- recommended, use latest release instead of latest commit
     lazy = true,
     ft = "markdown",
-    config = function ()
-      require("custom.configs.obsidian")
-      require("core.utils").load_mappings("obsidian")
+    config = function()
+      require "custom.configs.obsidian"
+      require("core.utils").load_mappings "obsidian"
     end,
     dependencies = {
       -- Required.
@@ -251,9 +249,9 @@ local plugins = {
   {
     "christoomey/vim-tmux-navigator",
     lazy = false,
-    config = function ()
-      require("core.utils").load_mappings("vim_tmux_navigator")
-    end
+    config = function()
+      require("core.utils").load_mappings "vim_tmux_navigator"
+    end,
   },
   {
     -- "vim-test/vim-test",
@@ -265,66 +263,62 @@ local plugins = {
   {
     "richardbizik/nvim-toc",
     ft = "markdown",
-    config = function ()
-      require('nvim-toc').setup({
-        toc_header = "Table of Contents"
-      })
-      require("core.utils").load_mappings("nvim_toc")
-    end
+    config = function()
+      require("nvim-toc").setup {
+        toc_header = "Table of Contents",
+      }
+      require("core.utils").load_mappings "nvim_toc"
+    end,
   },
   {
     "mg979/vim-visual-multi",
     event = "BufReadPost",
   },
   -- NOTE: favour octo.nvim over gh.nvim
-  -- {
-  --   "pwntester/octo.nvim",
-  --   dependencies = {
-  --     "nvim-lua/plenary.nvim",
-  --     "nvim-telescope/telescope.nvim",
-  --     "nvim-tree/nvim-web-devicons",
-  --   },
-  --   event = "BufReadPost",
-  --   config = function ()
-  --     require("custom.configs.octo")
-  --
-  --     -- require("core.utils").load_mappings("octo")
-  --   end
-  -- },
-  -- {
-  --   "ldelossa/gh.nvim",
-  --   event = "BufReadPost",
-  --   dependencies = {
-  --     {
-  --       "ldelossa/litee.nvim",
-  --       config = function()
-  --         require("litee.lib").setup()
-  --       end,
-  --     },
-  --   },
-  --   config = function()
-  --     require("custom.configs.gh")
-  --   end,
-  -- }
-  --
-  --
+  {
+    "pwntester/octo.nvim",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-telescope/telescope.nvim",
+      "nvim-tree/nvim-web-devicons",
+    },
+    event = "BufReadPost",
+    config = function()
+      require "custom.configs.octo"
 
+      -- require("core.utils").load_mappings("octo")
+    end,
+  },
+  {
+    "ldelossa/gh.nvim",
+    event = "BufReadPost",
+    dependencies = {
+      {
+        "ldelossa/litee.nvim",
+        config = function()
+          require("litee.lib").setup()
+        end,
+      },
+    },
+    config = function()
+      require "custom.configs.gh"
+    end,
+  },
   {
     "windwp/nvim-ts-autotag",
-    ft = {"javascript", "typescript", "javascriptreact", "typescriptreact"},
-    config = function ()
-      require("nvim-ts-autotag").setup({
+    ft = { "javascript", "typescript", "javascriptreact", "typescriptreact" },
+    config = function()
+      require("nvim-ts-autotag").setup {
         autotag = {
           enable = true,
           enable_renamme = true,
           enable_close = true,
           enable_close_on_slash = true,
-          filetypes = {"html", "jsx", "tsx", "javascript", "typescript", "javascriptreact", "typescriptreact"}
-        }
-      })
-    end
-  }
+          filetypes = { "html", "jsx", "tsx", "javascript", "typescript", "javascriptreact", "typescriptreact" },
+        },
+      }
+    end,
+  },
 }
-
 
 return plugins
