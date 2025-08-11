@@ -115,6 +115,7 @@ alias tmxf=tmuxifier
 
 alias sd="cd ~ && cd \$(find * -type d | fzf)"
 
+alias dhclaude='~/setup_claude_code.sh'
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
