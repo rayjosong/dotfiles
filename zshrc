@@ -84,6 +84,11 @@ nvm() {
 # Auto-load .nvmrc when entering directory (only if nvm is loaded)
 autoload -U add-zsh-hook
 load-nvmrc() {
+  # Load nvm if not already loaded
+  if ! typeset -f nvm_find_nvmrc > /dev/null 2>&1; then
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+  fi
+  
   if typeset -f nvm_find_nvmrc > /dev/null 2>&1; then
     local node_version="$(nvm version)"
     local nvmrc_path="$(nvm_find_nvmrc)"
