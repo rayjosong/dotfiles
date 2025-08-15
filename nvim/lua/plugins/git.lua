@@ -10,7 +10,7 @@ return {
       "nvim-lua/plenary.nvim",
     },
     keys = {
-      { "<leader>gg", "<cmd>LazyGit<cr>", desc = "LazyGit" },
+      -- Removed <leader>gg - handled by terminal.lua for enhanced integration
     },
     config = function()
       -- Preserve your commented configuration options for future use

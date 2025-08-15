@@ -180,12 +180,39 @@ Aggressive performance optimization - eliminated ALL lag sources:
 2. **Second press** `<leader>z` → Restores original layout (all windows visible)
 3. **If stuck**: Use `<leader>zr` to force restore all windows
 
+### **Marks System** 📍 ✨ NEW!
+**Set Marks (Built-in Vim):**
+- `ma` → Set mark 'a' at current line
+- `mb` → Set mark 'b' at current line  
+- `mA` → Set global mark 'A' (works across files)
+- `m1` → Set numbered mark 1-9
+
+**Jump to Marks (Built-in Vim):**
+- `'a` → Jump to line with mark 'a'
+- `` `a `` → Jump to exact position (line + column) of mark 'a'
+- `'A` → Jump to global mark 'A' (across files)
+
+**Remove Marks (Custom - Intuitive!):** ✨
+- `dma` → Delete mark 'a' (dm + letter pattern) 🔥
+- `dmb` → Delete mark 'b'
+- `dmA` → Delete global mark 'A'
+- `<leader>dm` → Delete ALL marks in current buffer
+- `<leader>sm` → Show all marks (list them)
+
 ### **Theme Management** 🎨
 - `<leader>ct` → Quick theme switcher (Catppuccin variants) ✨ NEW!
 - **Current**: Catppuccin (excellent choice for Go development)
 - **Variants**: Latte (light), Frappé, Macchiato, Mocha (dark)
 - **Guide**: See `LAZYVIM_THEMES.md` for comprehensive theme information
 - **Quick test**: `:colorscheme catppuccin-latte` for light mode
+
+### **Cheatsheet & Help** 📋 ✨ NEW!
+- `<leader>ch` → **Open interactive cheatsheet** 🔥 **MAIN HELP**
+- `<leader>fk` → Search keymaps with telescope
+- `:Telescope keymaps` → Search all keybindings
+- **Organized by**: LazyVim Core, Navigation, Git, Go Development, etc.
+- **Features**: Searchable, grouped by functionality, includes descriptions
+- **Content**: All keybindings from this guide, organized and discoverable!
 
 ### **Portable Setup** 📦 ✨ NEW!
 - `./setup.sh` → Automated dependency installation for new machines

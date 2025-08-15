@@ -96,6 +96,7 @@ nvim/
 - **Multi-cursor**: vim-visual-multi for efficient editing
 - **Surround**: nvim-surround for text object manipulation
 - **TODO Comments**: Enhanced navigation with `]t` / `[t`
+- **Built-in Terminal**: toggleterm.nvim for integrated terminal workflows
 
 ## 🎯 LazyVim Keybinding Mastery Guide
 
@@ -196,6 +197,19 @@ nvim/
 #### **Window/Navigation**
 - `<C-h/j/k/l>`: Navigate panes (tmux integration)
 - `<leader>sm`: Maximize window toggle
+
+#### **Terminal Integration (NEW!)** ⭐
+- `<C-\>`: Quick toggle terminal (default binding)
+- `<leader>tf`: Float terminal (floating window)
+- `<leader>th`: Horizontal split terminal
+- `<leader>tv`: Vertical split terminal
+- `<leader>tt`: Toggle current terminal
+- `<leader>ta`: Toggle all terminals
+- `<leader>ts`: Send visual selection to terminal
+- `<leader>gg`: Enhanced LazyGit (full screen)
+- **In Terminal Mode**:
+  - `<Esc>` or `jk`: Exit insert mode
+  - `<C-h/j/k/l>`: Navigate between terminal and vim panes
 
 #### **Obsidian & Markdown**
 - `<leader>on`: New Obsidian note
@@ -420,6 +434,51 @@ nvim/
 - 💾 Optimized memory usage
 - 🔧 Enhanced plugin management
 
+## Development & Maintenance Guidelines
+
+### **Documentation Requirements** 📝
+When making changes to this Neovim configuration, **ALWAYS** update:
+
+1. **CLAUDE.md** (this file):
+   - Add new features to relevant sections
+   - Update keybinding lists with new mappings
+   - Document configuration changes in architecture section
+   - Update plugin lists in appropriate categories
+
+2. **Cheatsheet Plugin** (`lua/plugins/cheatsheet.lua`):
+   - Add new keybindings to appropriate categories
+   - Create new categories for major feature additions
+   - Ensure all custom keybindings are discoverable via `<leader>ch`
+
+3. **Shell Scripts** (when external dependencies are required):
+   - Add system dependencies to relevant `.sh` installation scripts
+   - Document any required CLI tools (lazygit, ripgrep, etc.)
+   - Ensure new machines can be set up automatically
+
+### **External Dependencies Tracking** 🛠️
+Current system dependencies managed by shell scripts:
+- **LazyGit**: Git TUI interface (`<leader>gg`)
+- **Ripgrep**: Fast searching (used by Telescope)
+- **Node.js**: TypeScript/JavaScript LSP servers
+- **Go**: gopls language server and debugging tools
+- **Python**: pyright language server
+
+**Note**: For any new features requiring system-level installation, update the appropriate shell scripts in the dotfiles repository to maintain automated setup capability.
+
+### **Plugin Management Philosophy** ⚡
+- Prefer LazyVim built-in features over custom plugins
+- Only add plugins that provide unique functionality not available in LazyVim
+- Always check LazyVim extras before adding custom language support
+- Document plugin purpose and key benefits in CLAUDE.md
+
+### **Configuration Validation Checklist** ✅
+Before committing changes:
+1. Run `:checkhealth` to verify no broken dependencies
+2. Test all new keybindings in relevant file types
+3. Verify LSP functionality with `:LspInfo`
+4. Update cheatsheet with new features
+5. Document breaking changes in CLAUDE.md
+
 ## Final Notes
 
 This LazyVim migration successfully preserves your entire development workflow while providing the benefits of LazyVim's optimized architecture. All custom configurations, complex Obsidian setup, and development tools are fully functional with improved performance and maintainability.
@@ -427,3 +486,4 @@ This LazyVim migration successfully preserves your entire development workflow w
 **Migration completed**: 2025-08-15
 **Configuration version**: LazyVim-based with NvChad workflow preservation
 **Status**: Production-ready with comprehensive backup strategy
+**Last updated**: 2025-08-15 (Terminal integration added)

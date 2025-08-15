@@ -2,7 +2,9 @@
 return {
   {
     "neovim/nvim-lspconfig",
-    opts = {
+    opts = function(_, opts)
+      -- Merge with LazyVim defaults instead of overriding
+      return vim.tbl_deep_extend("force", opts, {
       -- Disable certain LSP features that can cause lag
       setup = {
         gopls = function(_, opts)
@@ -37,9 +39,15 @@ return {
           severity = { min = vim.diagnostic.severity.WARN }, -- Only show warnings and errors
         },
       },
+      -- Override inlay hints to disable for performance (merges with LazyVim defaults)
+      inlay_hints = {
+        enabled = false, -- Disable for performance (can be toggled with <leader>uh)
+        exclude = { "vue", "markdown" }, -- Merge with LazyVim's exclude list
+      },
       -- Reduce LSP log level
       log_level = vim.log.levels.WARN,
-    },
+      })
+    end,
   },
   
   -- Optimize completion for performance

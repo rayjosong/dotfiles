@@ -36,9 +36,9 @@ map("n", "<leader>gtj", "<cmd>GoTagAdd json<CR>", { desc = "Go: Add JSON tags" }
 map("n", "<leader>gte", "<cmd>GoIfErr<CR>", { desc = "Go: Generate if err" })
 
 -- ============================================================================
--- LAZYGIT
+-- LAZYGIT - Terminal configuration handles this mapping
 -- ============================================================================
-map("n", "<leader>gg", "<cmd>LazyGit<cr>", { desc = "Open LazyGit" })
+-- Note: <leader>gg is handled by terminal.lua for enhanced lazygit integration
 
 -- ============================================================================
 -- WINDOW MANAGEMENT
@@ -73,6 +73,31 @@ map("n", "<leader>zr", function()
 end, { desc = "Restore All Windows" })
 
 -- ============================================================================
+-- MARKS MANAGEMENT - Intuitive mark removal
+-- ============================================================================
+-- Set marks: ma, mb, mA, etc. (built-in vim)
+-- Jump to marks: 'a, 'b, 'A, etc. (built-in vim)
+-- Remove marks: dm + letter (custom, intuitive)
+
+-- Delete single mark function
+local function delete_mark()
+  local char = vim.fn.getcharstr()
+  if char and char ~= "" then
+    vim.cmd("delmarks " .. char)
+    print("Deleted mark '" .. char .. "'")
+  end
+end
+
+-- Delete mark keybinding (dm + letter pattern)
+map("n", "dm", delete_mark, { desc = "Delete mark (dm + letter)" })
+
+-- Delete all marks in current buffer
+map("n", "<leader>dm", "<cmd>delmarks!<cr>", { desc = "Delete all marks" })
+
+-- Show all marks
+map("n", "<leader>sm", "<cmd>marks<cr>", { desc = "Show all marks" })
+
+-- ============================================================================
 -- TODO COMMENTS (LazyVim includes these by default, but keeping custom ones)
 -- ============================================================================
 -- Note: LazyVim already provides ]t, [t, <leader>st, <leader>sT
@@ -91,6 +116,41 @@ map("n", "<leader>gb", "<cmd>BlamerToggle<cr>", { desc = "Git Blame" })
 map("n", "<leader>gy", function()
   require("gitlinker").get_buf_range_url("n")
 end, { desc = "Copy git link" })
+
+-- ============================================================================
+-- CODE FOLDING - Intuitive shortcuts for nvim-ufo
+-- ============================================================================
+-- Use default vim folding commands (za, zc, zo) with UFO enhancements
+-- UFO automatically enhances these when loaded
+
+-- Advanced folding operations
+map("n", "<leader>zf", function() require("ufo").closeAllFolds() end, { desc = "Close ALL folds" })
+map("n", "<leader>zo", function() require("ufo").openAllFolds() end, { desc = "Open ALL folds" })
+
+-- UFO-specific features
+map("n", "zR", function() require("ufo").openAllFolds() end, { desc = "Open all folds" })
+map("n", "zM", function() require("ufo").closeAllFolds() end, { desc = "Close all folds" })
+
+-- Go-specific folding shortcuts
+map("n", "<leader>gf", function()
+  -- Close all Go function folds
+  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+  for i, line in ipairs(lines) do
+    if line:match("^%s*func%s+") then
+      vim.cmd("normal! " .. i .. "Gzc")
+    end
+  end
+end, { desc = "Fold all Go functions" })
+
+map("n", "<leader>gs", function()
+  -- Close all Go struct folds  
+  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+  for i, line in ipairs(lines) do
+    if line:match("^%s*type%s+%w+%s+struct") then
+      vim.cmd("normal! " .. i .. "Gzc")
+    end
+  end
+end, { desc = "Fold all Go structs" })
 
 -- ============================================================================
 -- TESTING (Neotest)
