@@ -1,0 +1,9 @@
+{
+  "outputStyle": "Explanatory",
+  "verbose": true,
+  "theme": "dark-daltonized",
+  "editorMode": "normal",
+  "autoCompactEnabled": true,
+  "todoFeatureEnabled": true,
+  "autoConnectIde": true
+}
