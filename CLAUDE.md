@@ -1,0 +1,1 @@
+- when integrating any new neovim config, make sure to check if the new keymaps have conflict with existing keymaps. always find the most intuitive keymaps. think hard.

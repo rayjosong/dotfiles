@@ -28,9 +28,12 @@ nvim/
 │       ├── catppuccin.lua  # Theme configuration
 │       ├── go.lua          # Go development stack
 │       ├── git.lua         # Git/GitHub integration
+│       ├── aerial.lua      # Code outline & symbol navigation
+│       ├── diffview.lua    # Enhanced git diff & merge tools
 │       ├── editor.lua      # Editor enhancements
 │       ├── ui.lua          # UI/UX improvements
-│       └── markdown.lua    # Markdown/Obsidian tools
+│       ├── markdown.lua    # Markdown/Obsidian tools
+│       └── avante.lua      # AI assistant (Cursor-like)
 └── stylua.toml             # Lua formatting
 ```
 
@@ -43,7 +46,13 @@ nvim/
 - **Debugging**: DAP integration for Go debugging
 - **Testing**: Advanced test runner with neotest
 
-### 2. Git/GitHub Workflow (Preserved)
+### 2. AI-Powered Development (NEW!)
+- **Avante.nvim**: Cursor-like AI assistant in Neovim
+- **Claude Integration**: Direct integration with Anthropic's Claude
+- **Context-Aware**: Add files to AI context for better assistance
+- **Code Generation**: AI-powered code suggestions and modifications
+
+### 3. Git/GitHub Workflow (Preserved)
 - **LazyGit Integration**: Full-screen git interface (`<leader>gg`)
 - **GitHub Integration**: 
   - `octo.nvim`: Issues, PRs, reviews
@@ -53,7 +62,21 @@ nvim/
   - `blamer.nvim`: Inline git blame
   - Enhanced gitsigns for hunk navigation
 
-### 3. UI/UX Enhancements
+### 4. Code Navigation & Structure (NEW!)
+- **Aerial.nvim**: Intelligent code outline with Go-specific optimizations
+- **Symbol Navigation**: Quick jump between functions, structs, methods
+- **Telescope Integration**: Fuzzy search through code symbols
+- **Go Integration**: Enhanced symbol display with type information
+- **LSP-Powered**: Accurate symbol detection via language servers
+
+### 5. Enhanced Git Workflow (NEW!)
+- **Diffview.nvim**: Professional diff viewing and merge conflict resolution
+- **3-Way Merges**: Visual merge conflict resolution with base comparison
+- **File History**: Browse complete git history with visual diffs
+- **Branch Comparison**: Compare any branches or commits visually
+- **LazyGit Integration**: Seamless workflow between diffview and lazygit
+
+### 6. UI/UX Enhancements
 - **Theme**: Catppuccin with LazyVim integration
 - **Notifications**: nvim-notify with opacity = 20
 - **Enhanced UI**: noice.nvim for better command line/messages
@@ -61,6 +84,22 @@ nvim/
 - **Which-key**: Enhanced keybinding display
 
 ## Core Workflows
+
+### AI-Assisted Development (NEW!)
+- **Ask AI**: `<leader>aa` - Ask AI about current code
+- **Edit with AI**: `<leader>ae` - Get AI suggestions for code improvements  
+- **Context Management**: `<leader>ac` - Add current file to AI context
+- **Model Selection**: `<leader>a?` - Switch between AI models
+- **Neo-tree Integration**: `<leader>a+` - Add files from neo-tree to AI context
+
+#### Key AI Mappings:
+- `<leader>aa`: Ask AI about current code or selection
+- `<leader>an`: Start new AI conversation
+- `<leader>ae`: Edit current code with AI assistance
+- `<leader>af`: Focus AI sidebar
+- `<leader>at`: Toggle AI sidebar
+- `<leader>ac`: Add current buffer to AI context
+- `<leader>aB`: Add all open buffers to AI context
 
 ### Go Development
 - **Language Server**: gopls with goimports, gofumpt
@@ -97,6 +136,53 @@ nvim/
 - **Surround**: nvim-surround for text object manipulation
 - **TODO Comments**: Enhanced navigation with `]t` / `[t`
 - **Built-in Terminal**: toggleterm.nvim for integrated terminal workflows
+
+### Code Navigation & Structure Workflow (NEW!)
+- **Symbol Outline**: `<leader>ao` - Toggle aerial code outline
+- **Symbol Navigation**: `]]` / `[[` - Next/previous symbol
+- **Function Navigation**: `]f` / `[f` - Next/previous function (optimized for Go)
+- **Struct/Class Navigation**: `]c` / `[c` - Next/previous struct/class
+- **Method Navigation**: `]m` / `[m` - Next/previous method
+- **Symbol Search**: `<leader>ay` - Fuzzy search all symbols with Telescope
+- **Float Outline**: `<leader>al` - Show symbols in floating window
+- **Navigation Window**: `<leader>ax` - Toggle dedicated navigation sidebar
+
+#### Key Aerial Mappings:
+- `<leader>ao`: Toggle code outline sidebar
+- `<leader>ax`: Toggle navigation window
+- `<leader>al`: Floating symbol outline
+- `<leader>ay`: Search symbols with Telescope
+- `]]` / `[[`: Navigate between any symbols
+- `]f` / `[f`: Navigate between functions
+- `]c` / `[c`: Navigate between structs/classes
+- `]m` / `[m`: Navigate between methods
+
+### Enhanced Git Diff Workflow (NEW!)
+- **Diff Views**: `<leader>gdo` - Open visual diff for current changes
+- **Branch Comparison**: `<leader>gdm` - Compare with any branch/commit
+- **File History**: `<leader>ghf` - Visual git history for current file
+- **Merge Conflicts**: `<leader>gxo` - Visual merge conflict resolution
+- **3-Way Merge**: `<leader>gx3` - Three-way merge for current file
+- **Git Log**: `<leader>ghl` - Visual git log with diffs
+
+#### Key Diffview Mappings:
+- `<leader>gdo`: Open diff view
+- `<leader>gdc`: Close diff view  
+- `<leader>gdt`: Toggle file panel
+- `<leader>gdf`: Focus file panel
+- `<leader>gdm`: Compare with branch/commit
+- `<leader>ghf`: File history
+- `<leader>gha`: All files history
+- `<leader>ghl`: Git log
+- `<leader>gxo`: Resolve merge conflicts
+- `<leader>gx3`: 3-way merge
+
+#### Merge Conflict Resolution:
+- `<leader>co`: Choose OURS (current branch)
+- `<leader>ct`: Choose THEIRS (incoming)
+- `<leader>cb`: Choose BASE (merge base)
+- `<leader>ca`: Choose ALL (keep both)
+- `]x` / `[x`: Navigate between conflicts
 
 ## 🎯 LazyVim Keybinding Mastery Guide
 
@@ -141,6 +227,27 @@ nvim/
 - `gy`: Go to type definition
 - `K`: Hover documentation
 - `<leader>ca`: Code actions
+
+#### **Symbol Navigation (Aerial.nvim)** ⭐ NEW!
+- `<leader>ao`: Toggle code outline sidebar
+- `<leader>ax`: Toggle navigation window
+- `<leader>al`: Floating symbol outline  
+- `<leader>ay`: Search symbols with Telescope
+- `]]` / `[[`: Navigate between any symbols
+- `]f` / `[f`: Navigate between functions
+- `]c` / `[c`: Navigate between structs/classes
+- `]m` / `[m`: Navigate between methods
+
+#### **Enhanced Git Diff (Diffview.nvim)** ⭐ NEW!
+- `<leader>gdo`: Open diff view for current changes
+- `<leader>gdc`: Close diff view
+- `<leader>gdt`: Toggle file panel
+- `<leader>gdm`: Compare with branch/commit
+- `<leader>ghf`: File history (visual git log)
+- `<leader>gha`: All files history
+- `<leader>ghl`: Git log with diffs
+- `<leader>gxo`: Resolve merge conflicts
+- `<leader>gx3`: 3-way merge current file
 - `<leader>cr`: Rename symbol ⭐ Enhanced!
 - `<leader>cf`: Format buffer
 - `<leader>cd`: Line diagnostics ⭐ NEW!
@@ -280,6 +387,20 @@ nvim/
 - nvim-ts-autotag: Auto tag closing
 - Enhanced which-key configuration
 - Lualine with catppuccin theme
+
+#### Code Navigation & Structure (`plugins/aerial.lua`) - NEW!
+- aerial.nvim: Intelligent code outline and symbol navigation
+- Telescope integration: Fuzzy search through symbols
+- Go-specific optimizations: Enhanced function/struct/method display
+- LSP-powered: Accurate symbol detection and navigation
+- Multi-language support: Go, TypeScript, Python, Lua
+
+#### Enhanced Git Workflow (`plugins/diffview.lua`) - NEW!
+- diffview.nvim: Professional diff viewing and merge conflict resolution
+- Visual merge conflicts: 3-way merge with base comparison
+- File history browser: Complete git history with visual diffs
+- Branch comparison: Compare any branches or commits visually
+- LazyGit integration: Seamless workflow between tools
 
 #### Markdown/Obsidian (`plugins/markdown.lua`)
 - obsidian.nvim: Complete workspace configuration preserved

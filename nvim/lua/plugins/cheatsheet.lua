@@ -224,6 +224,57 @@ return {
             { 'Terminal: Navigate panes', '<C-h/j/k/l>' },
           },
 
+          -- Code Navigation & Structure (NEW!)
+          ['Code Navigation (Aerial)'] = {
+            { 'Toggle code outline sidebar', '<leader>ao' },
+            { 'Toggle navigation window', '<leader>ax' },
+            { 'Floating symbol outline', '<leader>al' },
+            { 'Search symbols (Telescope)', '<leader>ay' },
+            { 'Next/prev symbol', ']] / [[' },
+            { 'Next/prev function', ']f / [f' },
+            { 'Next/prev struct/class', ']c / [c' },
+            { 'Next/prev method', ']m / [m' },
+          },
+
+          -- Enhanced Git Diff & Merge (NEW!)
+          ['Git Diff & Merge (Diffview)'] = {
+            { 'Open diff view', '<leader>gdo' },
+            { 'Close diff view', '<leader>gdc' },
+            { 'Toggle file panel', '<leader>gdt' },
+            { 'Focus file panel', '<leader>gdf' },
+            { 'Compare with branch/commit', '<leader>gdm' },
+            { 'File history (git log)', '<leader>ghf' },
+            { 'All files history', '<leader>gha' },
+            { 'Git log with diffs', '<leader>ghl' },
+            { 'Resolve merge conflicts', '<leader>gxo' },
+            { '3-way merge current file', '<leader>gx3' },
+          },
+
+          -- Merge Conflict Resolution
+          ['Merge Conflicts'] = {
+            { 'Choose OURS (current branch)', '<leader>co' },
+            { 'Choose THEIRS (incoming)', '<leader>ct' },
+            { 'Choose BASE (merge base)', '<leader>cb' },
+            { 'Choose ALL (keep both)', '<leader>ca' },
+            { 'Navigate conflicts', ']x / [x' },
+            { 'Delete conflict region', 'dx' },
+          },
+
+          -- AI Assistant (Avante.nvim)
+          ['AI Assistant (Avante)'] = {
+            { 'Ask AI about code', '<leader>aa' },
+            { 'New AI conversation', '<leader>an' },
+            { 'Edit with AI', '<leader>ae' },
+            { 'Focus AI sidebar', '<leader>af' },
+            { 'Toggle AI sidebar', '<leader>at' },
+            { 'Refresh AI response', '<leader>ar' },
+            { 'Add current file to context', '<leader>ac' },
+            { 'Add all buffers to context', '<leader>aB' },
+            { 'Select AI model', '<leader>a?' },
+            { 'AI history', '<leader>aH' },
+            { 'Stop AI generation', '<leader>aS' },
+          },
+
           -- Help & Utility
           ['Help & Utility'] = {
             { 'Open this cheatsheet!', '<leader>ch' },
