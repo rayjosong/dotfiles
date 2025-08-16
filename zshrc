@@ -170,7 +170,7 @@ alias df='cd $HOME/code/rayjosong/dotfiles/'
 alias vim=nvim
 alias lg='lazygit'
 alias tmxf=tmuxifier
-alias dhclaude='~/setup_claude_code.sh'
+alias dhclaude='$HOME/code/rayjosong/dotfiles/setup_claude_code.sh'
 
 # ----------------------------------------------------------------------------
 # Navigation with fzf/zoxide

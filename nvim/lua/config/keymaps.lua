@@ -109,6 +109,7 @@ map("n", "<leader>sm", "<cmd>marks<cr>", { desc = "Show all marks" })
 -- Note: Tmux navigation keybindings are now handled by vim-tmux-navigator plugin
 -- in plugins/editor.lua to ensure proper lazy loading
 
+
 -- ============================================================================
 -- GIT UTILITIES
 -- ============================================================================
@@ -194,23 +195,122 @@ map("n", "<Tab>", "<cmd>bnext<cr>", { desc = "Next Buffer" })
 map("n", "<S-Tab>", "<cmd>bprevious<cr>", { desc = "Previous Buffer" })
 
 -- ============================================================================
--- THEME SWITCHING
+-- DYNAMIC THEME SWITCHING
 -- ============================================================================
 map("n", "<leader>ct", function()
-  vim.ui.select({
-    "catppuccin",
-    "catppuccin-latte",
-    "catppuccin-frappe", 
-    "catppuccin-macchiato",
-    "catppuccin-mocha",
-  }, {
-    prompt = "Select Catppuccin variant:",
+  -- Function to get all available colorschemes
+  local function get_colorschemes()
+    local colorschemes = {}
+    
+    -- Get all available colorschemes from runtime path
+    local colors_dirs = vim.api.nvim_get_runtime_file("colors/*.vim", true)
+    local colors_lua_dirs = vim.api.nvim_get_runtime_file("colors/*.lua", true)
+    
+    -- Process .vim colorscheme files
+    for _, file in ipairs(colors_dirs) do
+      local name = vim.fn.fnamemodify(file, ":t:r")
+      if name ~= "" then
+        table.insert(colorschemes, name)
+      end
+    end
+    
+    -- Process .lua colorscheme files
+    for _, file in ipairs(colors_lua_dirs) do
+      local name = vim.fn.fnamemodify(file, ":t:r")
+      if name ~= "" then
+        table.insert(colorschemes, name)
+      end
+    end
+    
+    -- Add plugin-specific colorschemes that might not be in colors/ directory
+    local plugin_themes = {
+      "catppuccin",
+      "catppuccin-latte",
+      "catppuccin-frappe", 
+      "catppuccin-macchiato",
+      "catppuccin-mocha",
+      "cyberdream",
+      "rose-pine",
+      "rose-pine-main",
+      "rose-pine-moon", 
+      "rose-pine-dawn",
+      "tokyonight",
+      "tokyonight-night",
+      "tokyonight-storm",
+      "tokyonight-day",
+      "tokyonight-moon",
+    }
+    
+    -- Add plugin themes if they're not already in the list
+    for _, theme in ipairs(plugin_themes) do
+      local exists = false
+      for _, existing in ipairs(colorschemes) do
+        if existing == theme then
+          exists = true
+          break
+        end
+      end
+      if not exists then
+        -- Test if the colorscheme actually exists by trying to load it silently
+        local ok = pcall(vim.cmd.colorscheme, theme)
+        if ok then
+          table.insert(colorschemes, theme)
+          -- Restore current colorscheme
+          pcall(vim.cmd.colorscheme, vim.g.colors_name or "default")
+        end
+      end
+    end
+    
+    -- Remove duplicates and sort
+    local unique_colorschemes = {}
+    local seen = {}
+    for _, name in ipairs(colorschemes) do
+      if not seen[name] then
+        seen[name] = true
+        table.insert(unique_colorschemes, name)
+      end
+    end
+    
+    table.sort(unique_colorschemes)
+    return unique_colorschemes
+  end
+  
+  -- Get current colorscheme for highlighting
+  local current_colorscheme = vim.g.colors_name or "default"
+  
+  -- Get all available colorschemes
+  local colorschemes = get_colorschemes()
+  
+  -- Create formatted list with current scheme highlighted
+  local formatted_schemes = {}
+  for _, scheme in ipairs(colorschemes) do
+    if scheme == current_colorscheme then
+      table.insert(formatted_schemes, "● " .. scheme .. " (current)")
+    else
+      table.insert(formatted_schemes, "  " .. scheme)
+    end
+  end
+  
+  vim.ui.select(formatted_schemes, {
+    prompt = "Select colorscheme (" .. #colorschemes .. " available):",
+    format_item = function(item)
+      return item
+    end,
   }, function(choice)
     if choice then
-      vim.cmd("colorscheme " .. choice)
+      -- Extract the actual colorscheme name (remove formatting)
+      local scheme_name = choice:gsub("^[● ]*", ""):gsub(" %(current%)$", "")
+      
+      -- Apply the colorscheme
+      local ok, err = pcall(vim.cmd.colorscheme, scheme_name)
+      if ok then
+        vim.notify("Applied colorscheme: " .. scheme_name, vim.log.levels.INFO)
+      else
+        vim.notify("Failed to apply colorscheme: " .. scheme_name .. "\nError: " .. tostring(err), vim.log.levels.ERROR)
+      end
     end
   end)
-end, { desc = "Change colorscheme" })
+end, { desc = "Change colorscheme (dynamic)" })
 
 -- Note: File operations (telescope), buffer management, and other core keybindings
 -- are explicitly configured in plugins/telescope.lua and should work:

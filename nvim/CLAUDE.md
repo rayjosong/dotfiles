@@ -14,6 +14,16 @@ Successfully migrated from NvChad to LazyVim on 2025-08-15, preserving:
 
 ## Architecture
 
+**📚 For detailed architecture explanation, see [architecture.md](./architecture.md)**
+
+This comprehensive guide covers:
+- LazyVim fundamentals (lazy loading, plugin specs)
+- Configuration concepts (`opts`, `config`, `init`, `priority`)
+- Plugin organization strategies
+- Language extras system
+- Troubleshooting and maintenance
+- Performance optimization
+
 ### LazyVim Structure
 ```
 nvim/
@@ -215,6 +225,7 @@ nvim/
 - `<leader>fr`: Recent files ⭐ NEW!
 - `<leader>fg`: Live grep
 - `<leader>fb`: Buffers
+- `<leader>fz`: Fuzzy find in current buffer ⭐ NEW!
 - `<leader>,`: Switch buffers ⭐ NEW!
 - `<leader>fn`: New file ⭐ NEW!
 - `<leader>e`: Toggle file explorer
@@ -323,6 +334,10 @@ nvim/
 - `<leader>ot`: Insert template
 - `<leader>oo`: Open in Obsidian
 - `<leader>mt`: Generate TOC
+- `<leader>mp`: Toggle markdown preview with mermaid support (primary) ⭐ NEW!
+- `<leader>mm`: Open markdown preview in browser ⭐ NEW!
+- `<leader>ms`: Stop markdown preview ⭐ NEW!
+- `<leader>mP`: Advanced peek preview (requires Deno) ⭐ NEW!
 
 #### **Git Custom**
 - `<leader>gb`: Git blame
@@ -402,11 +417,12 @@ nvim/
 - Branch comparison: Compare any branches or commits visually
 - LazyGit integration: Seamless workflow between tools
 
-#### Markdown/Obsidian (`plugins/markdown.lua`)
+#### Markdown/Obsidian (`plugins/markdown.lua`, `plugins/mermaid.lua`)
 - obsidian.nvim: Complete workspace configuration preserved
 - bullets.vim: Markdown bullets
 - nvim-toc: Table of contents generation
 - markdown-preview.nvim: Live preview
+- peek.nvim: Modern markdown preview with mermaid diagram support ⭐ NEW!
 
 ## Configuration Philosophy
 

@@ -59,11 +59,8 @@ return {
         opts.formatters_by_ft[ft] = formatters
       end
       
-      -- Enable format on save
-      opts.format_on_save = {
-        timeout_ms = 500,
-        lsp_fallback = true,
-      }
+      -- LazyVim handles format_on_save automatically via its formatting system
+      -- No need to set opts.format_on_save as it conflicts with LazyVim defaults
     end,
   },
 

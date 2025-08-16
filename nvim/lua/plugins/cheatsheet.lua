@@ -195,7 +195,8 @@ return {
 
           -- Theme & UI
           ['Theme & UI'] = {
-            { 'Theme switcher (Catppuccin)', '<leader>ct' },
+            { 'Dynamic theme switcher (All themes)', '<leader>ct' },
+            { 'Available themes: Catppuccin, Cyberdream, Rose Pine + more', 'ℹ️' },
             { 'Toggle relative numbers', '<leader>ur' },
             { 'Toggle word wrap', '<leader>uw' },
             { 'Toggle spelling', '<leader>us' },

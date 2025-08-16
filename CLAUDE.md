@@ -1,1 +1,2 @@
 - when integrating any new neovim config, make sure to check if the new keymaps have conflict with existing keymaps. always find the most intuitive keymaps. think hard.
+- if we need to manually install something, make sure to add it to @nvim/setup.sh

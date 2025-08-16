@@ -159,20 +159,39 @@ install_go_tools() {
 
 # Install optional tools
 install_optional_tools() {
-    log_info "Installing optional tools (lazygit, gh)..."
+    log_info "Installing optional tools (lazygit, gh, deno)..."
     
     case $OS in
         macos)
-            brew install lazygit gh
+            brew install lazygit gh deno
             ;;
         ubuntu)
             sudo apt install -y lazygit gh
+            # Install deno manually for Ubuntu
+            if ! command_exists deno; then
+                log_info "Installing Deno..."
+                curl -fsSL https://deno.land/install.sh | sh
+                # Add deno to PATH
+                export PATH="$HOME/.deno/bin:$PATH"
+            fi
             ;;
         fedora)
             sudo dnf install -y lazygit gh
+            # Install deno manually for Fedora
+            if ! command_exists deno; then
+                log_info "Installing Deno..."
+                curl -fsSL https://deno.land/install.sh | sh
+                export PATH="$HOME/.deno/bin:$PATH"
+            fi
             ;;
         rhel)
             sudo yum install -y lazygit gh
+            # Install deno manually for RHEL
+            if ! command_exists deno; then
+                log_info "Installing Deno..."
+                curl -fsSL https://deno.land/install.sh | sh
+                export PATH="$HOME/.deno/bin:$PATH"
+            fi
             ;;
     esac
     
@@ -185,7 +204,7 @@ verify_installation() {
     
     local tools=("fd" "rg" "git" "node" "nvim")
     local go_tools=("go" "golangci-lint" "goimports" "gofumpt")
-    local optional_tools=("lazygit" "gh")
+    local optional_tools=("lazygit" "gh" "deno")
     
     # Check core tools
     for tool in "${tools[@]}"; do
@@ -220,7 +239,7 @@ verify_installation() {
 update_shell_config() {
     log_info "Updating shell configuration..."
     
-    # Add Go PATH to shell config
+    # Determine shell config file
     local shell_config=""
     if [[ $SHELL == *"zsh"* ]]; then
         shell_config="$HOME/.zshrc"
@@ -228,13 +247,27 @@ update_shell_config() {
         shell_config="$HOME/.bashrc"
     fi
     
-    if [[ -n "$shell_config" ]] && command_exists go; then
-        local go_path_export='export PATH=$PATH:$(go env GOPATH)/bin'
-        if ! grep -q "go env GOPATH" "$shell_config" 2>/dev/null; then
-            echo "" >> "$shell_config"
-            echo "# Go tools PATH" >> "$shell_config"
-            echo "$go_path_export" >> "$shell_config"
-            log_success "Added Go PATH to $shell_config"
+    if [[ -n "$shell_config" ]]; then
+        # Add Go PATH to shell config
+        if command_exists go; then
+            local go_path_export='export PATH=$PATH:$(go env GOPATH)/bin'
+            if ! grep -q "go env GOPATH" "$shell_config" 2>/dev/null; then
+                echo "" >> "$shell_config"
+                echo "# Go tools PATH" >> "$shell_config"
+                echo "$go_path_export" >> "$shell_config"
+                log_success "Added Go PATH to $shell_config"
+            fi
+        fi
+        
+        # Add Deno PATH to shell config (for non-homebrew installations)
+        if [[ -d "$HOME/.deno" ]]; then
+            local deno_path_export='export PATH="$HOME/.deno/bin:$PATH"'
+            if ! grep -q ".deno/bin" "$shell_config" 2>/dev/null; then
+                echo "" >> "$shell_config"
+                echo "# Deno PATH" >> "$shell_config"
+                echo "$deno_path_export" >> "$shell_config"
+                log_success "Added Deno PATH to $shell_config"
+            fi
         fi
     fi
 }

@@ -1,24 +1,37 @@
 return {
   "yetone/avante.nvim",
+  enabled = false, -- Disabled as requested
   event = "VeryLazy",
   lazy = false,
   version = false, -- set this if you want to always pull the latest change
   -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
   build = "make",
   opts = {
-    -- Provider configuration - using Claude as default
-    provider = "claude", -- recommend using Claude
+    -- Use Claude provider configuration but with corporate Gemini model
+    provider = "claude",
+    auto_apply_diff_after_generation = false,
+    auto_suggestions = false,
+    
+    -- Configure corporate proxy with Gemini model
     providers = {
       claude = {
-        endpoint = "https://api.anthropic.com",
-        model = "claude-3-5-sonnet-20241022",
-        timeout = 30000, -- Timeout in milliseconds
+        endpoint = "https://pd-llm-proxy.deliveryhero.net",
+        model = "gemini-2-5-pro-exp",
+        timeout = 30000,
+        api_key_name = "ANTHROPIC_API_KEY",
         extra_request_body = {
           temperature = 0.7,
           max_tokens = 4096,
         },
       },
+      -- Explicitly disable vertex AI providers
+      vertex = false,
+      gemini = false,
+      vertex_claude = false,
     },
+    
+    -- Disable provider auto-detection completely
+    detect_provider = false,
     -- Behavior configuration optimized for your workflow
     behaviour = {
       auto_suggestions = false, -- Keep false for now, still experimental
@@ -131,6 +144,35 @@ return {
   },
   -- Integration with your existing file explorers
   config = function(_, opts)
+    -- Load environment variables from .env file directly in Neovim
+    local env_vars = {}
+    local env_file = vim.fn.expand("~/code/rayjosong/dotfiles/.env")
+    
+    if vim.fn.filereadable(env_file) == 1 then
+      for line in io.lines(env_file) do
+        -- Parse environment variable lines (skip comments and empty lines)
+        local key, value = line:match("^([%w_]+)=(.+)$")
+        if key and value then
+          -- Remove quotes if present
+          value = value:gsub('^"(.*)"$', '%1')
+          value = value:gsub("^'(.*)'$", '%1')
+          vim.env[key] = value
+          env_vars[key] = value
+        end
+      end
+    end
+    
+    -- Ensure ANTHROPIC_API_KEY is set for Avante
+    if not vim.env.ANTHROPIC_API_KEY and env_vars.ANTHROPIC_API_KEY then
+      vim.env.ANTHROPIC_API_KEY = env_vars.ANTHROPIC_API_KEY
+    end
+    
+    -- FORCE disable Google Cloud / Vertex AI detection in Neovim
+    vim.env.GOOGLE_APPLICATION_CREDENTIALS = ""
+    vim.env.GOOGLE_CLOUD_PROJECT = ""
+    vim.env.GCLOUD_PROJECT = ""
+    vim.env.VERTEX_AI_ENABLED = "false"
+    
     require("avante").setup(opts)
     
     -- Neo-tree integration (since you use neo-tree)

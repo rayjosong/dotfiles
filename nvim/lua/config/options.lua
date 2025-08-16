@@ -60,9 +60,9 @@ opt.regexpengine = 1 -- Use faster regex engine
 opt.scrolljump = 8 -- Scroll more lines at once
 opt.maxmempattern = 1000 -- Limit pattern memory
 
--- Disable expensive features
+-- Disable expensive features for performance
 opt.cursorcolumn = false -- Disable cursor column highlighting
-opt.relativenumber = false -- Disable relative numbers (can cause lag)
+-- Note: relativenumber is already set to true above (line 16) for productivity
 opt.foldmethod = "manual" -- Disable automatic folding
 
 -- File handling performance
