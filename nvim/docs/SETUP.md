@@ -201,6 +201,39 @@ export PATH=$PATH:$(go env GOPATH)/bin
 - Formatters (prettier, stylua, etc.)
 - Some linters and tools
 
+## 🦕 Optional: Deno Installation (for Advanced Markdown Preview)
+
+If you want to use the advanced `peek.nvim` plugin for mermaid viewing:
+
+### **Quick Installation**
+```bash
+# macOS (Homebrew)
+brew install deno
+
+# Linux/macOS (Universal)
+curl -fsSL https://deno.land/install.sh | sh
+```
+
+### **Manual PATH Setup** (if needed)
+Add to your `~/.zshrc` or `~/.bashrc`:
+```bash
+export PATH="$HOME/.deno/bin:$PATH"
+```
+
+### **Automated Installation**
+The setup script option 3 includes Deno automatically.
+
+### **Verification**
+```bash
+deno --version
+```
+
+### **Usage**
+- `<leader>mP` - Advanced peek preview (requires Deno)
+- `<leader>mp` - Standard markdown preview (works without Deno)
+
+**Note**: Deno is optional - markdown preview works fine without it using the standard preview plugin.
+
 ## 🔄 Updating Dependencies
 
 ```bash
