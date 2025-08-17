@@ -55,6 +55,10 @@ return {
         markdown = { "prettier", "mdformat" },
         json = { "prettier" },
         yaml = { "prettier" },
+        python = { "black" },
+        terraform = { "terraform_fmt" },
+        javascript = { "prettier" },
+        typescript = { "prettier" },
       }
       
       for ft, formatters in pairs(custom_formatters) do
@@ -111,6 +115,8 @@ return {
         "flake8",
         "markdown-toc",
         "prettier",
+        "black",
+        "terraform_fmt",
         -- Note: fd and ripgrep are installed via Homebrew, not Mason
       })
     end,

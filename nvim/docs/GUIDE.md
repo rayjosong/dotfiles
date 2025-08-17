@@ -330,6 +330,71 @@ keys = {
 5. **Test functionality** and run `:checkhealth` if needed
 6. **Update setup.sh** if manual installation is required
 
+## ⚙️ Formatting & Auto-Save
+
+This configuration uses `conform.nvim` to automatically format your code every time you save. The necessary formatting tools are managed by `mason.nvim`.
+
+### **How It Works**
+- **`conform.nvim`**: Runs the formatters on your code. Configured in `lua/plugins/editor.lua`.
+- **`mason.nvim`**: Installs the command-line tools that do the actual formatting. Also configured in `lua/plugins/editor.lua`.
+
+Format-on-save is **enabled by default** for all configured languages.
+
+### **How to Add a New Formatter**
+
+Here’s how to enable auto-formatting for a new language, using `stylua` for Lua as an example.
+
+**Step 1: Find the Formatter Name**
+First, identify the correct name for the formatter tool (e.g., `stylua`). You can search for supported formatters on the [`conform.nvim` docs](https://github.com/stevearc/conform.nvim/blob/master/doc/formatters.md) or see what's available in `:Mason`.
+
+**Step 2: Add Formatter to Mason**
+Open `lua/plugins/editor.lua` and add the formatter's name to the `ensure_installed` list inside the `mason.nvim` configuration.
+
+```lua
+-- lua/plugins/editor.lua
+  {
+    "williamboman/mason.nvim",
+    opts = function(_, opts)
+      opts.ensure_installed = opts.ensure_installed or {}
+      vim.list_extend(opts.ensure_installed, {
+        -- ... other tools
+        "prettier",
+        "black",
+        "terraform_fmt",
+        "stylua", -- <-- Add the new formatter here
+      })
+    end,
+  },
+```
+
+**Step 3: Configure the Formatter**
+In the same file (`lua/plugins/editor.lua`), add an entry for the new filetype in the `custom_formatters` table inside the `conform.nvim` configuration.
+
+```lua
+-- lua/plugins/editor.lua
+  {
+    "stevearc/conform.nvim",
+    opts = function(_, opts)
+      local custom_formatters = {
+        -- ... other formatters
+        typescript = { "prettier" },
+        lua = { "stylua" }, -- <-- Add the new filetype and formatter here
+      }
+      
+      for ft, formatters in pairs(custom_formatters) do
+        opts.formatters_by_ft[ft] = formatters
+      end
+    end,
+  },
+```
+
+**Step 4: Restart and Verify**
+1. **Restart Neovim**.
+2. Mason will automatically install `stylua`. You can check the status with `:Mason`.
+3. Open a Lua file (`.lua`), make a change, and save it (`:w`). The code should auto-format.
+
+This process works for any language. Just find the right tool and update these two sections!
+
 ## 🚨 Quick Troubleshooting
 
 ### **Common Issues**
