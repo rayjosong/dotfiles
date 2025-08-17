@@ -53,6 +53,8 @@ return {
       local custom_formatters = {
         go = { "goimports", "gofumpt" },
         markdown = { "prettier", "mdformat" },
+        json = { "prettier" },
+        yaml = { "prettier" },
       }
       
       for ft, formatters in pairs(custom_formatters) do
@@ -108,6 +110,7 @@ return {
         "markdownlint",
         "flake8",
         "markdown-toc",
+        "prettier",
         -- Note: fd and ripgrep are installed via Homebrew, not Mason
       })
     end,

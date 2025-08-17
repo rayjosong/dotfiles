@@ -188,6 +188,148 @@ Essential workflows and keybindings for your LazyVim configuration.
 - If anything feels slow, it's likely a configuration issue
 - Use `:checkhealth` to verify setup
 
+## 🔌 Installing New Plugins
+
+### **Method 1: Create New Plugin File (Recommended)**
+Create a new `.lua` file in `lua/plugins/`:
+
+```lua
+-- lua/plugins/my-new-plugin.lua
+return {
+  {
+    "author/plugin-name",
+    event = "VeryLazy",     -- Load after startup
+    dependencies = {
+      "required/dependency",
+    },
+    keys = {
+      { "<leader>mp", "<cmd>MyPluginCommand<cr>", desc = "My Plugin" },
+    },
+    opts = {
+      -- plugin configuration
+    },
+  },
+}
+```
+
+### **Method 2: Add to Existing Plugin File**
+Edit existing file like `lua/plugins/editor.lua`:
+
+```lua
+return {
+  -- existing plugins...
+  {
+    "new/plugin-repo",
+    config = function()
+      require("plugin").setup({
+        -- configuration here
+      })
+    end,
+  },
+}
+```
+
+### **Plugin Loading Strategies**
+```lua
+{
+  "author/plugin",
+  lazy = false,           -- Load immediately on startup
+  event = "VeryLazy",     -- Load after UI is ready
+  cmd = "PluginCommand",  -- Load when command is run
+  keys = "<leader>p",     -- Load when key is pressed
+  ft = { "go", "lua" },   -- Load for specific filetypes
+  dependencies = {},      -- Required plugins
+  priority = 1000,        -- Load order (higher = first)
+}
+```
+
+### **Real Examples from This Config**
+
+**UI Plugin with Keybindings:**
+```lua
+-- lua/plugins/aerial.lua (code outline)
+return {
+  {
+    "stevearc/aerial.nvim",
+    cmd = { "AerialToggle", "AerialOpen" },
+    keys = {
+      { "<leader>ao", "<cmd>AerialToggle<cr>", desc = "Toggle Outline" },
+      { "<leader>ay", "<cmd>Telescope aerial<cr>", desc = "Search Symbols" },
+    },
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    opts = {
+      layout = { default_direction = "right" },
+      backends = { "lsp", "treesitter" },
+    },
+  },
+}
+```
+
+**Theme Plugin:**
+```lua
+-- lua/plugins/catppuccin.lua
+return {
+  {
+    "catppuccin/nvim",
+    name = "catppuccin",
+    lazy = false,        -- Load immediately
+    priority = 1000,     -- Load before other plugins
+    config = function()
+      require("catppuccin").setup({
+        flavour = "mocha",
+        integrations = { telescope = true, mason = true },
+      })
+      vim.cmd.colorscheme("catppuccin")
+    end,
+  },
+}
+```
+
+### **Plugin Management Commands**
+```bash
+# Check all plugins status:
+:Lazy
+
+# Update all plugins:
+:Lazy update
+
+# Install new plugins (after adding to config):
+:Lazy install
+
+# Remove unused plugins:
+:Lazy clean
+
+# View plugin startup performance:
+:Lazy profile
+
+# Debug plugin issues:
+:Lazy log
+```
+
+### **Adding Keybindings**
+When adding plugins, check for keymap conflicts:
+
+```lua
+-- In your plugin config
+keys = {
+  { "<leader>mp", "<cmd>PluginCommand<cr>", desc = "My Plugin Command" },
+  { "<leader>mt", "<cmd>PluginToggle<cr>", desc = "Toggle Plugin" },
+  -- Use descriptive names for which-key integration
+},
+```
+
+**Check existing keymaps:**
+- `<leader>fk` - Search all keybindings
+- `<leader>ch` - Interactive cheatsheet
+
+### **Installation Workflow**
+1. **Research plugin** - Check GitHub, requirements, dependencies
+2. **Create config file** in `lua/plugins/plugin-name.lua`
+3. **Add keybindings** (check for conflicts with `<leader>fk`)
+4. **Restart nvim** or run `:Lazy reload`
+5. **Test functionality** and run `:checkhealth` if needed
+6. **Update setup.sh** if manual installation is required
+
 ## 🚨 Quick Troubleshooting
 
 ### **Common Issues**
@@ -195,6 +337,7 @@ Essential workflows and keybindings for your LazyVim configuration.
 - **Tmux nav broken**: Check that tmux plugin is installed and configured
 - **Buffer picker empty**: Use `<leader>ff` for file finder instead
 - **AI not responding**: Check Avante plugin status with `:Lazy`
+- **Plugin not loading**: Check `:Lazy` for errors, verify config syntax
 
 ### **Getting Help**
 - `<leader>ch` - Interactive cheatsheet (main help system)
