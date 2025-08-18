@@ -18,7 +18,7 @@ ZSH_COLOURIZE_STYLE="colorful"
 ZSH_DISABLE_COMPFIX=true
 
 # Oh My Zsh plugins
-plugins=(git gitfast last-working-dir common-aliases zsh-syntax-highlighting history-substring-search zsh-autosuggestions)
+plugins=(git gitfast last-working-dir common-aliases zsh-syntax-highlighting history-substring-search zsh-autosuggestions zsh-vi-mode)
 
 # Load Oh My Zsh
 source "${ZSH}/oh-my-zsh.sh"

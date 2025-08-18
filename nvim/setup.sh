@@ -157,6 +157,25 @@ install_go_tools() {
     log_success "Go tools installed"
 }
 
+# Install zsh plugins
+install_zsh_plugins() {
+    log_info "Installing zsh plugins..."
+    
+    # Install zsh-vi-mode plugin if oh-my-zsh is available
+    if [[ -d "$HOME/.oh-my-zsh" ]]; then
+        local plugin_dir="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-vi-mode"
+        if [[ ! -d "$plugin_dir" ]]; then
+            log_info "Installing zsh-vi-mode plugin..."
+            git clone https://github.com/jeffreytse/zsh-vi-mode "$plugin_dir"
+            log_success "zsh-vi-mode plugin installed"
+        else
+            log_success "zsh-vi-mode plugin already installed"
+        fi
+    else
+        log_warning "oh-my-zsh not found, skipping zsh plugins"
+    fi
+}
+
 # Install optional tools
 install_optional_tools() {
     log_info "Installing optional tools (lazygit, gh, deno)..."
@@ -293,11 +312,13 @@ main() {
         1)
             install_package_manager
             install_core_tools
+            install_zsh_plugins
             ;;
         2)
             install_package_manager
             install_core_tools
             install_go_tools
+            install_zsh_plugins
             update_shell_config
             ;;
         3)
@@ -305,6 +326,7 @@ main() {
             install_core_tools
             install_go_tools
             install_optional_tools
+            install_zsh_plugins
             update_shell_config
             ;;
         4)
