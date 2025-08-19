@@ -10,7 +10,7 @@ local function get_fd_command()
   
   for _, path in ipairs(fd_paths) do
     if vim.fn.executable(path) == 1 then
-      return { path, "--type", "f", "--strip-cwd-prefix" }
+      return { path, "--type", "f", "--hidden", "--strip-cwd-prefix" }
     end
   end
   
