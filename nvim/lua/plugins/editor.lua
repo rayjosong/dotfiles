@@ -7,7 +7,7 @@ return {
     "christoomey/vim-tmux-navigator",
     cmd = {
       "TmuxNavigateLeft",
-      "TmuxNavigateDown", 
+      "TmuxNavigateDown",
       "TmuxNavigateUp",
       "TmuxNavigateRight",
       "TmuxNavigatePrevious",
@@ -53,12 +53,17 @@ return {
       local custom_formatters = {
         go = { "goimports", "gofumpt" },
         markdown = { "prettier", "mdformat" },
+        json = { "prettier" },
+        yaml = { "prettier" },
+        python = { "black" },
+        javascript = { "prettier" },
+        typescript = { "prettier" },
       }
-      
+
       for ft, formatters in pairs(custom_formatters) do
         opts.formatters_by_ft[ft] = formatters
       end
-      
+
       -- LazyVim handles format_on_save automatically via its formatting system
       -- No need to set opts.format_on_save as it conflicts with LazyVim defaults
     end,
@@ -70,22 +75,22 @@ return {
     opts = function(_, opts)
       -- COMPLETELY DISABLE markdown linting to eliminate noise and improve performance
       opts.linters_by_ft = opts.linters_by_ft or {}
-      
+
       -- Disable all markdown linting
       opts.linters_by_ft.markdown = {}
       opts.linters_by_ft.md = {}
-      
+
       -- Add only essential custom linters
       local custom_linters = {
         -- Disable golangci-lint to avoid exit code 3 errors - use gopls LSP instead
         -- go = { "golangcilint" },
         python = { "flake8" },
       }
-      
+
       for ft, linters in pairs(custom_linters) do
         opts.linters_by_ft[ft] = linters
       end
-      
+
       -- Completely remove markdownlint from available linters
       if opts.linters then
         opts.linters.markdownlint = nil
@@ -102,14 +107,17 @@ return {
       vim.list_extend(opts.ensure_installed, {
         -- Your custom tools
         "goimports",
-        "gofumpt", 
+        "gofumpt",
         "mdformat",
         "golangci-lint",
         "markdownlint",
         "flake8",
         "markdown-toc",
+        "prettier",
+        "black",
         -- Note: fd and ripgrep are installed via Homebrew, not Mason
       })
     end,
   },
 }
+
