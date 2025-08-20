@@ -114,9 +114,7 @@ map("n", "<leader>sm", "<cmd>marks<cr>", { desc = "Show all marks" })
 -- GIT UTILITIES
 -- ============================================================================
 map("n", "<leader>gb", "<cmd>BlamerToggle<cr>", { desc = "Git Blame" })
-map("n", "<leader>gy", function()
-  require("gitlinker").get_buf_range_url("n")
-end, { desc = "Copy git link" })
+-- Note: <leader>gy keymap is handled by gitlinker.nvim plugin in git.lua
 
 -- ============================================================================
 -- CODE FOLDING - Intuitive shortcuts for nvim-ufo

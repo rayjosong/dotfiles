@@ -41,12 +41,40 @@ return {
   {
     "ruifm/gitlinker.nvim",
     dependencies = "nvim-lua/plenary.nvim",
+    event = "VeryLazy", -- Load eagerly to ensure keymaps are available
     config = function()
-      require("gitlinker").setup()
+      require("gitlinker").setup({
+        opts = {
+          mappings = nil, -- Don't use default mappings, we'll define our own
+        },
+      })
+      
+      -- Custom function that copies git link and shows notification
+      local function copy_git_link()
+        require("gitlinker").get_buf_range_url("n", {
+          action_callback = function(url)
+            -- Copy to clipboard
+            vim.fn.setreg("+", url)
+            vim.fn.setreg("*", url)
+            
+            -- Show notification using noice/notify
+            local has_notify, notify = pcall(require, "notify")
+            if has_notify then
+              notify("Git link copied to clipboard", "info", {
+                title = "GitLinker",
+                icon = "🔗",
+                timeout = 2000,
+              })
+            else
+              vim.notify("Git link copied: " .. url, vim.log.levels.INFO)
+            end
+          end,
+        })
+      end
+      
+      -- Set the keymap directly in config to ensure it's loaded
+      vim.keymap.set("n", "<leader>gy", copy_git_link, { desc = "Copy Git Link" })
     end,
-    keys = {
-      { "<leader>gy", function() require("gitlinker").get_buf_range_url("n") end, desc = "Copy Git Link" },
-    },
   },
 
   -- GitHub integration with Octo (issues, PRs, reviews)
