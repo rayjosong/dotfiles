@@ -40,6 +40,9 @@ export EDITOR=nvim
 export BUNDLER_EDITOR=nvim
 export HOMEBREW_NO_ANALYTICS=1
 
+# Dotfiles directory - adjust per machine
+export DOTFILES_DIR="$HOME/code/rayjosong/dotfiles"
+
 # ----------------------------------------------------------------------------
 # Development Tools
 # ----------------------------------------------------------------------------
@@ -59,6 +62,9 @@ fi
 # ============================================================================
 export PATH="./bin:./node_modules/.bin:${PATH}:/usr/local/sbin"
 [[ -d "$HOME/.local/bin" ]] && export PATH="$PATH:$HOME/.local/bin"
+
+# Dotfiles scripts - portable across machines
+[[ -d "$DOTFILES_DIR/scripts" ]] && export PATH="$PATH:$DOTFILES_DIR/scripts"
 
 # tmuxifier - only load if available
 if [[ -x "$HOME/.tmuxifier/bin/tmuxifier" ]]; then
@@ -132,7 +138,7 @@ fi
 # EXTERNAL CONFIGURATIONS
 # ============================================================================
 # Load environment variables if file exists (contains sensitive credentials)
-[[ -f ~/code/rayjosong/dotfiles/.env ]] && source ~/code/rayjosong/dotfiles/.env
+[[ -f "$DOTFILES_DIR/.env" ]] && source "$DOTFILES_DIR/.env"
 
 # Load custom aliases
 [[ -f "$HOME/.aliases" ]] && source "$HOME/.aliases"
@@ -171,6 +177,7 @@ alias vim=nvim
 alias lg='lazygit'
 alias tmxf=tmuxifier
 alias dhclaude='$HOME/code/rayjosong/dotfiles/setup_claude_code.sh'
+alias myclaude='claude-launcher.sh'
 
 # ----------------------------------------------------------------------------
 # Navigation with fzf/zoxide
