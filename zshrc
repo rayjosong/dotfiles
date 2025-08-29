@@ -49,7 +49,7 @@ export DOTFILES_DIR="$HOME/code/rayjosong/dotfiles"
 # Go configuration
 export GOPATH=$HOME/go
 export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
-go env -w GOPRIVATE="github.com/deliveryhero/*"
+go env -w GOPRIVATE="$COMPANY_GITHUB_ORG/*"
 
 # Bun setup
 if [[ -d "$HOME/.bun" ]]; then
@@ -166,8 +166,8 @@ fi
 # ----------------------------------------------------------------------------
 alias oo='cd $HOME/Library/Mobile\ Documents/iCloud\~md\~obsidian/Documents/Personal\ Vault/'
 alias ofp='cd $HOME/Library/Mobile\ Documents/iCloud\~md\~obsidian/Documents/foodpanda/'
-alias ppg='cd $HOME/code/deliveryhero/pd-pablo-payment-gateway/'
-alias pac='cd $HOME/code/deliveryhero/pd-app-config/'
+alias ppg='cd $COMPANY_PAYMENT_GATEWAY/'
+alias pac='cd $COMPANY_APP_CONFIG/'
 alias df='cd $HOME/code/rayjosong/dotfiles/'
 
 # ----------------------------------------------------------------------------
@@ -191,3 +191,6 @@ alias sd="cd ~ && cd \$(find * -type d | fzf)"
 cz() {
     dir=$(dirname "$(fzf)") && [[ -n "$dir" ]] && z "$dir"
 }
+
+# pd-database-connector tools
+[[ -f "$COMPANY_FINTECH_TOOLS/pd-database-connector/init.sh" ]] && source "$COMPANY_FINTECH_TOOLS/pd-database-connector/init.sh"
