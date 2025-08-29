@@ -102,14 +102,38 @@ setup_claude_env() {
         echo -e "${CYAN}[INFO]${NC} Setting up Claude environment..."
     fi
     
-    # Set DeepSeek API configuration
-    export ANTHROPIC_BASE_URL="https://api.deepseek.com/anthropic"
-    export API_TIMEOUT_MS="600000"
-    export ANTHROPIC_MODEL="deepseek-chat"
-    export ANTHROPIC_SMALL_FAST_MODEL="deepseek-chat"
+    # Map DeepSeek configuration to Anthropic variables for runtime
+    if [[ -n "$DEEPSEEK_BASE_URL" ]]; then
+        export ANTHROPIC_BASE_URL="$DEEPSEEK_BASE_URL"
+    else
+        export ANTHROPIC_BASE_URL="https://api.deepseek.com/anthropic"
+    fi
     
-    # Set API token from environment or prompt
-    if [[ -z "$ANTHROPIC_AUTH_TOKEN" && -z "$YOUR_API_KEY" ]]; then
+    if [[ -n "$DEEPSEEK_TIMEOUT_MS" ]]; then
+        export API_TIMEOUT_MS="$DEEPSEEK_TIMEOUT_MS"
+    else
+        export API_TIMEOUT_MS="600000"
+    fi
+    
+    if [[ -n "$DEEPSEEK_MODEL" ]]; then
+        export ANTHROPIC_MODEL="$DEEPSEEK_MODEL"
+    else
+        export ANTHROPIC_MODEL="deepseek-chat"
+    fi
+    
+    if [[ -n "$DEEPSEEK_SMALL_FAST_MODEL" ]]; then
+        export ANTHROPIC_SMALL_FAST_MODEL="$DEEPSEEK_SMALL_FAST_MODEL"
+    else
+        export ANTHROPIC_SMALL_FAST_MODEL="deepseek-chat"
+    fi
+    
+    # Set API token from DeepSeek environment or prompt
+    if [[ -n "$DEEPSEEK_API_KEY" && "$DEEPSEEK_API_KEY" != "your_deepseek_api_key_here" ]]; then
+        export ANTHROPIC_AUTH_TOKEN="$DEEPSEEK_API_KEY"
+    elif [[ -n "$YOUR_API_KEY" ]]; then
+        # Fallback to legacy YOUR_API_KEY for backwards compatibility
+        export ANTHROPIC_AUTH_TOKEN="$YOUR_API_KEY"
+    elif [[ -z "$ANTHROPIC_AUTH_TOKEN" ]]; then
         if command_exists gum; then
             ANTHROPIC_AUTH_TOKEN=$(gum input --password --placeholder "Enter your DeepSeek API key...")
         else
@@ -117,8 +141,6 @@ setup_claude_env() {
             read -s ANTHROPIC_AUTH_TOKEN
         fi
         export ANTHROPIC_AUTH_TOKEN
-    elif [[ -n "$YOUR_API_KEY" ]]; then
-        export ANTHROPIC_AUTH_TOKEN="$YOUR_API_KEY"
     fi
     
     if command_exists gum; then
@@ -244,17 +266,26 @@ if [[ "$1" == "--help" || "$1" == "-h" ]]; then
     echo "Usage: claude-launcher [claude options]"
     echo ""
     echo "This script automatically:"
-    echo "  • Loads API key from .env file"
-    echo "  • Sets up DeepSeek API configuration"
-    echo "  • Launches Claude with proper environment"
+    echo "  • Loads DEEPSEEK_* variables from .env file"
+    echo "  • Maps them to ANTHROPIC_* variables at runtime"
+    echo "  • Launches Claude with proper DeepSeek environment"
     echo ""
     echo "Environment file locations (in order):"
     echo "  • ./.env (current directory)"
     echo "  • ~/.env (home directory)"  
     echo "  • ~/.config/claude/.env"
     echo ""
-    echo "Required .env variable:"
-    echo "  YOUR_API_KEY=your_deepseek_api_key_here"
+    echo "Required .env variables:"
+    echo "  DEEPSEEK_API_KEY=your_deepseek_api_key_here"
+    echo ""
+    echo "Optional .env variables:"
+    echo "  DEEPSEEK_BASE_URL=https://api.deepseek.com/anthropic"
+    echo "  DEEPSEEK_MODEL=deepseek-chat"
+    echo "  DEEPSEEK_SMALL_FAST_MODEL=deepseek-chat"
+    echo "  DEEPSEEK_TIMEOUT_MS=600000"
+    echo ""
+    echo "Legacy compatibility:"
+    echo "  YOUR_API_KEY=... (still supported)"
     echo ""
     echo "Optional: Install 'gum' for beautiful UI"
     echo "  brew install gum"

@@ -115,6 +115,63 @@ setup_environment() {
     fi
 }
 
+# Check corporate API usage/spending
+check_usage() {
+    # Skip usage check if required variables are not set
+    if [ -z "${CORPORATE_USAGE_API_URL:-}" ] || [ -z "${CORPORATE_USER_ID:-}" ] || [ -z "${ANTHROPIC_AUTH_TOKEN:-}" ]; then
+        gum style --foreground="#F59E0B" "⚠️  Usage check skipped - missing configuration"
+        return 0
+    fi
+    
+    gum spin --title="Checking your corporate API usage..." --show-output -- sleep 0.5
+    
+    # Make API call to check usage
+    local response
+    response=$(curl -s --max-time 10 \
+        --request GET \
+        --url "${CORPORATE_USAGE_API_URL}?user_id=${CORPORATE_USER_ID}" \
+        --header "authorization: Bearer ${ANTHROPIC_AUTH_TOKEN}" 2>/dev/null) || {
+        gum style --foreground="#F59E0B" "⚠️  Could not fetch usage data (API timeout/error)"
+        return 0
+    }
+    
+    if [ -n "$response" ]; then
+        # Try to parse spending using jq if available, fallback to grep
+        local spend=""
+        if command -v jq &> /dev/null; then
+            spend=$(echo "$response" | jq -r '.user_info.spend // "unknown"' 2>/dev/null)
+        else
+            # Fallback: extract spend using grep and basic text manipulation
+            spend=$(echo "$response" | grep -o '"spend":[^,}]*' | head -1 | cut -d':' -f2 | tr -d '"' 2>/dev/null || echo "unknown")
+        fi
+        
+        if [ -n "$spend" ] && [ "$spend" != "null" ] && [ "$spend" != "unknown" ]; then
+            # Format spending to 2 decimal places
+            local formatted_spend
+            if command -v bc &> /dev/null; then
+                # Use bc for precise floating point formatting
+                formatted_spend=$(printf "%.2f" "$spend" 2>/dev/null || echo "$spend")
+            else
+                # Fallback: use printf (may not work with all shell implementations)
+                formatted_spend=$(printf "%.2f" "$spend" 2>/dev/null || echo "$spend")
+            fi
+            
+            gum style \
+                --foreground="#10B981" \
+                --border="rounded" \
+                --margin="1" \
+                --padding="1 2" \
+                "💰 Corporate API Usage: \$${formatted_spend}"
+        else
+            gum style --foreground="#F59E0B" "⚠️  Could not parse usage data from API response"
+        fi
+    else
+        gum style --foreground="#F59E0B" "⚠️  Empty response from usage API"
+    fi
+    
+    echo  # Add spacing
+}
+
 # Main execution
 main() {
     # Check if help is requested
@@ -144,6 +201,7 @@ All other arguments are passed directly to claude CLI."
     
     check_dependencies
     setup_environment
+    check_usage
     
     local selected_model
     
