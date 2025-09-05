@@ -68,12 +68,26 @@ return {
     local fd_command = get_fd_command()
     local rg_command = get_rg_command()
     
+    -- Extract vimgrep arguments (exclude the rg command itself)
+    local vimgrep_args = {}
+    if rg_command[1]:match("rg") then
+      -- Use the detected rg arguments, skipping the command path
+      for i = 2, #rg_command do
+        table.insert(vimgrep_args, rg_command[i])
+      end
+    else
+      -- Fallback for grep
+      vimgrep_args = { "-r", "-n", "-H" }
+    end
+    
     return {
       defaults = {
         -- Use detected fd command or fallback
         find_command = fd_command,
-        -- Use detected ripgrep command or fallback
-        vimgrep_arguments = rg_command,
+        -- Use proper vimgrep arguments
+        vimgrep_arguments = vim.list_extend({
+          rg_command[1], -- The rg command path
+        }, vimgrep_args),
       },
       pickers = {
         find_files = {
