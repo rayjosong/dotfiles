@@ -26,10 +26,26 @@ opt.smartindent = true
 opt.tabstop = 2
 opt.shiftwidth = 2
 
--- UI
-opt.wrap = false
+-- UI and Display Responsiveness
+opt.wrap = true -- Enable wrapping by default for better screen responsiveness
+opt.linebreak = true -- Break lines at word boundaries when wrap is enabled
+opt.breakindent = true -- Maintain indentation for wrapped lines
+opt.showbreak = "↪ " -- Visual indicator for wrapped lines
 opt.cursorline = true
 opt.termguicolors = true
+
+-- Smart cursor movement and navigation
+opt.startofline = false -- Keep cursor column when moving between lines
+opt.whichwrap = "b,s,<,>,[,]" -- Allow cursor to wrap between lines with arrow keys
+
+-- Viewport Management for Better Screen Responsiveness
+opt.scrolloff = 8 -- Keep 8 lines visible above/below cursor
+opt.sidescrolloff = 8 -- Keep 8 columns visible left/right of cursor
+opt.sidescroll = 1 -- Smooth horizontal scrolling
+
+-- Optional: Visual line length guides (can be toggled)
+opt.textwidth = 0 -- No automatic line breaking (manual control)
+opt.colorcolumn = "" -- No column guide by default (can be toggled)
 
 -- System clipboard integration (from your NvChad core/init.lua)
 opt.clipboard = "unnamedplus"

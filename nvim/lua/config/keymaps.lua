@@ -193,6 +193,136 @@ map("n", "<Tab>", "<cmd>bnext<cr>", { desc = "Next Buffer" })
 map("n", "<S-Tab>", "<cmd>bprevious<cr>", { desc = "Previous Buffer" })
 
 -- ============================================================================
+-- SMART CURSOR MOVEMENT
+-- ============================================================================
+
+-- Smart vertical movement: if cursor is at column 0-1, move to first non-whitespace
+-- Otherwise, maintain column position (Vim's default behavior)
+map("n", "j", function()
+  local col = vim.fn.col(".")
+  if col <= 2 then -- At beginning of line (accounting for potential space)
+    return "j^" -- Move down and go to first non-whitespace
+  else
+    return "j" -- Normal down movement
+  end
+end, { expr = true, desc = "Smart down movement" })
+
+map("n", "k", function()
+  local col = vim.fn.col(".")
+  if col <= 2 then -- At beginning of line
+    return "k^" -- Move up and go to first non-whitespace
+  else
+    return "k" -- Normal up movement
+  end
+end, { expr = true, desc = "Smart up movement" })
+
+-- Alternative: use gj/gk for display line movement (useful with wrapping)
+map("n", "gj", "j", { desc = "Move down by actual line" })
+map("n", "gk", "k", { desc = "Move up by actual line" })
+
+-- Enhanced arrow key movement (respect wrapping and indentation)
+map("n", "<Down>", function()
+  local col = vim.fn.col(".")
+  if col <= 2 then
+    return "gj^" -- Move down by display line and go to first non-whitespace
+  else
+    return "gj" -- Move down by display line
+  end
+end, { expr = true, desc = "Smart down (display line)" })
+
+map("n", "<Up>", function()
+  local col = vim.fn.col(".")
+  if col <= 2 then
+    return "gk^" -- Move up by display line and go to first non-whitespace
+  else
+    return "gk" -- Move up by display line
+  end
+end, { expr = true, desc = "Smart up (display line)" })
+
+-- ============================================================================
+-- RESPONSIVE DISPLAY CONTROLS
+-- ============================================================================
+
+-- Enhanced wrap toggle with smart behavior (uses LazyVim's <leader>uw but enhanced)
+map("n", "<leader>uw", function()
+  local current_wrap = vim.opt_local.wrap:get()
+  local new_wrap = not current_wrap
+  
+  vim.opt_local.wrap = new_wrap
+  vim.opt_local.linebreak = new_wrap -- Enable smart line breaking when wrap is on
+  
+  local status = new_wrap and "enabled" or "disabled"
+  vim.notify("Text wrap " .. status .. " (smart)", vim.log.levels.INFO)
+end, { desc = "Toggle text wrap (smart enhanced)" })
+
+-- Toggle column guide based on current window width (avoiding LazyVim's <leader>uc)
+map("n", "<leader>vg", function()
+  local current_col = vim.opt_local.colorcolumn:get()
+  
+  if current_col == "" then
+    -- Enable column guide based on window width
+    local win_width = vim.api.nvim_win_get_width(0)
+    local guide_col = "80"
+    if win_width > 120 then
+      guide_col = "100"
+    elseif win_width > 80 then
+      guide_col = "80"
+    else
+      guide_col = "70"
+    end
+    vim.opt_local.colorcolumn = guide_col
+    vim.notify("Column guide enabled at " .. guide_col, vim.log.levels.INFO)
+  else
+    -- Disable column guide
+    vim.opt_local.colorcolumn = ""
+    vim.notify("Column guide disabled", vim.log.levels.INFO)
+  end
+end, { desc = "Toggle column guide (responsive)" })
+
+-- Quick scroll offset adjustment (avoiding LazyVim's <leader>us)
+map("n", "<leader>vo", function()
+  local current_scrolloff = vim.opt.scrolloff:get()
+  local new_scrolloff = current_scrolloff == 8 and 3 or 8
+  
+  vim.opt.scrolloff = new_scrolloff
+  vim.opt.sidescrolloff = new_scrolloff
+  
+  vim.notify("Scroll offset set to " .. new_scrolloff, vim.log.levels.INFO)
+end, { desc = "Toggle scroll offset (3/8)" })
+
+-- Force responsive adjustment for current window (avoiding LazyVim's <leader>ur)
+map("n", "<leader>vr", function()
+  local win_width = vim.api.nvim_win_get_width(0)
+  local filetype = vim.bo.filetype
+  
+  -- Adjust column guide
+  if win_width > 120 then
+    vim.opt_local.colorcolumn = "100"
+  elseif win_width > 80 then
+    vim.opt_local.colorcolumn = "80"
+  else
+    vim.opt_local.colorcolumn = ""
+  end
+  
+  -- Apply smart wrap for text files
+  local text_filetypes = { "markdown", "text", "gitcommit" }
+  local is_text_file = false
+  for _, ft in ipairs(text_filetypes) do
+    if filetype == ft then
+      is_text_file = true
+      break
+    end
+  end
+  
+  if is_text_file then
+    vim.opt_local.wrap = true
+    vim.opt_local.linebreak = true
+  end
+  
+  vim.notify("Display refreshed for " .. win_width .. " columns", vim.log.levels.INFO)
+end, { desc = "Force responsive display refresh" })
+
+-- ============================================================================
 -- DYNAMIC THEME SWITCHING
 -- ============================================================================
 map("n", "<leader>ct", function()
