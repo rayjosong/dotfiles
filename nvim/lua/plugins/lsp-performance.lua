@@ -18,9 +18,9 @@ return {
                 fieldalignment = false,
                 nilness = false,
               },
-              -- Faster completion
-              usePlaceholders = false,
-              completeUnimported = false, -- Disable to improve performance
+              -- Better completion behavior
+              usePlaceholders = true, -- Enable for better completion
+              completeUnimported = true, -- Enable for better completion
               staticcheck = false, -- Disable to improve performance
               gofumpt = true,
               -- Reduce memory usage
@@ -50,21 +50,68 @@ return {
     end,
   },
   
-  -- Optimize completion for performance
+  -- Optimize completion for performance and fix text replacement
   {
     "hrsh7th/nvim-cmp",
-    opts = {
-      performance = {
-        debounce = 150, -- Add debounce to reduce lag
-        throttle = 100,
-        fetching_timeout = 200,
-        max_abbr_width = 60,
-        max_kind_width = 60,
-        max_menu_width = 60,
-      },
-      completion = {
-        keyword_length = 2, -- Require 2 characters before completion
-      },
-    },
+    opts = function(_, opts)
+      local cmp = require("cmp")
+
+      return vim.tbl_deep_extend("force", opts, {
+        performance = {
+          debounce = 150, -- Add debounce to reduce lag
+          throttle = 100,
+          fetching_timeout = 200,
+          max_abbr_width = 60,
+          max_kind_width = 60,
+          max_menu_width = 60,
+        },
+        completion = {
+          keyword_length = 2, -- Require 2 characters before completion
+          completeopt = "menu,menuone,noselect",
+        },
+        -- Fix the text replacement behavior
+        confirmation = {
+          default_behavior = cmp.ConfirmBehavior.Replace,
+        },
+        mapping = vim.tbl_extend("force", opts.mapping or {}, {
+          ["<CR>"] = cmp.mapping({
+            i = function(fallback)
+              if cmp.visible() and cmp.get_active_entry() then
+                cmp.confirm({
+                  behavior = cmp.ConfirmBehavior.Replace,
+                  select = false,
+                })
+              else
+                fallback()
+              end
+            end,
+            s = cmp.mapping.confirm({ select = true }),
+            c = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true }),
+          }),
+          ["<Tab>"] = cmp.mapping({
+            i = function(fallback)
+              if cmp.visible() then
+                cmp.confirm({
+                  behavior = cmp.ConfirmBehavior.Replace,
+                  select = true,
+                })
+              else
+                fallback()
+              end
+            end,
+            s = function(fallback)
+              if cmp.visible() then
+                cmp.confirm({
+                  behavior = cmp.ConfirmBehavior.Replace,
+                  select = true,
+                })
+              else
+                fallback()
+              end
+            end,
+          }),
+        }),
+      })
+    end,
   },
 }

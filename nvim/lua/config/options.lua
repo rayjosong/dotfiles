@@ -55,8 +55,8 @@ opt.backup = false
 opt.writebackup = false
 opt.swapfile = false
 
--- Completion
-opt.completeopt = { "menuone", "noselect" }
+-- Completion - fix text replacement behavior
+opt.completeopt = { "menu", "menuone", "noselect" }
 
 -- Splits
 opt.splitbelow = true

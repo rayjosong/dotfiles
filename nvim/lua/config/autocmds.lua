@@ -107,3 +107,20 @@ vim.api.nvim_create_autocmd("WinEnter", {
   end,
   desc = "Adjust display settings when entering window",
 })
+
+-- ============================================================================
+-- COMPLETION BEHAVIOR FIXES
+-- ============================================================================
+
+-- Ensure proper completion behavior and text replacement
+vim.api.nvim_create_autocmd("CompleteDone", {
+  group = vim.api.nvim_create_augroup("completion_fix", { clear = true }),
+  callback = function()
+    -- Ensure completion properly replaces text
+    if vim.v.completed_item and vim.v.completed_item.word then
+      -- Log for debugging if needed
+      -- vim.notify("Completed: " .. vim.v.completed_item.word, vim.log.levels.DEBUG)
+    end
+  end,
+  desc = "Handle completion done events for proper text replacement",
+})

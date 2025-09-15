@@ -130,16 +130,10 @@ map("n", "<leader>zo", function() require("ufo").openAllFolds() end, { desc = "O
 map("n", "zR", function() require("ufo").openAllFolds() end, { desc = "Open all folds" })
 map("n", "zM", function() require("ufo").closeAllFolds() end, { desc = "Close all folds" })
 
--- Go-specific folding shortcuts
+-- Global word search
 map("n", "<leader>gf", function()
-  -- Close all Go function folds
-  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-  for i, line in ipairs(lines) do
-    if line:match("^%s*func%s+") then
-      vim.cmd("normal! " .. i .. "Gzc")
-    end
-  end
-end, { desc = "Fold all Go functions" })
+  require("telescope.builtin").grep_string({ search = vim.fn.expand("<cword>") })
+end, { desc = "Global word search (find word under cursor)" })
 
 map("n", "<leader>gs", function()
   -- Close all Go struct folds  
@@ -440,12 +434,27 @@ map("n", "<leader>ct", function()
   end)
 end, { desc = "Change colorscheme (dynamic)" })
 
+-- ============================================================================
+-- COMPLETION DEBUGGING (if needed)
+-- ============================================================================
+map("n", "<leader>cd", function()
+  local cmp = require("cmp")
+  if cmp.visible() then
+    vim.notify("CMP is visible", vim.log.levels.INFO)
+  else
+    vim.notify("CMP is not visible", vim.log.levels.INFO)
+  end
+
+  -- Show completion info
+  vim.notify("completeopt: " .. table.concat(vim.opt.completeopt:get(), ","), vim.log.levels.INFO)
+end, { desc = "Debug completion state" })
+
 -- Note: File operations (telescope), buffer management, and other core keybindings
 -- are explicitly configured in plugins/telescope.lua and should work:
 -- <leader>ff - Find files (fuzzy finder)
 -- <leader>fg - Live grep (MAIN GLOBAL SEARCH) 🔥
--- <leader>fw - Search word under cursor globally
--- <leader>fb - Find buffers  
+-- <leader>gf - Global word search (find word under cursor)
+-- <leader>fb - Find buffers
 -- <leader>fr - Recent files
 -- <leader>, - Buffer picker (fuzzy search)
 -- <leader>e  - Focus file tree

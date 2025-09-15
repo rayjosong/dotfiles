@@ -80,7 +80,7 @@ return {
           -- Search & Files  
           ['Search & Files'] = {
             { 'Live grep (MAIN GLOBAL SEARCH)', '<leader>fg' },
-            { 'Search word under cursor', '<leader>fw' },
+            { 'Search word under cursor', '<leader>gf' },
             { 'Find files by name', '<leader>ff' },
             { 'Find open buffers', '<leader>fb' },
             { 'Recent files', '<leader>fr' },
@@ -142,7 +142,7 @@ return {
             { 'Open fold under cursor', 'zo' },
             { 'Close ALL folds', 'zM or <leader>zf' },
             { 'Open ALL folds', 'zR or <leader>zo' },
-            { 'Fold all Go functions', '<leader>gf' },
+            { 'Global word search (word under cursor)', '<leader>gf' },
             { 'Fold all Go structs', '<leader>gs' },
             { 'Peek folded content', 'K' },
           },

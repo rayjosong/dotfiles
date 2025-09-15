@@ -54,7 +54,6 @@ return {
     -- Override LazyVim defaults to ensure they work
     { "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find Files" },
     { "<leader>fg", "<cmd>Telescope live_grep<cr>", desc = "Live Grep (Global Search)" },
-    { "<leader>fw", function() require("telescope.builtin").grep_string({ search = vim.fn.expand("<cword>") }) end, desc = "Search Word Under Cursor" },
     { "<leader>fb", "<cmd>Telescope buffers<cr>", desc = "Find Buffers" },
     { "<leader>fr", "<cmd>Telescope oldfiles<cr>", desc = "Recent Files" },
     { "<leader>fc", "<cmd>Telescope commands<cr>", desc = "Commands" },

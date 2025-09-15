@@ -165,6 +165,8 @@ return {
         noremap = true,
         nowait = true,
       },
+      -- Ensure proper buffer settings to avoid 'modifiable' issues
+      auto_expand_width = false,
       mappings = {
         -- RE-ENABLE SEARCH FUNCTIONALITY (but hide the visual bar)
         ["/"] = "fuzzy_finder",
@@ -199,17 +201,132 @@ return {
         ["A"] = "add_directory",
         ["d"] = "delete",
         ["r"] = "rename",
-        ["y"] = "copy_to_clipboard",
-        ["x"] = "cut_to_clipboard",
-        ["p"] = "paste_from_clipboard",
-        ["c"] = "copy",
-        ["m"] = "move",
+        ["y"] = {
+          "copy_to_clipboard",
+          config = {
+            show_path = "relative"
+          }
+        },
+        ["x"] = {
+          function(state)
+            local node = state.tree:get_node()
+            local path = node:get_id()
+            local filename = vim.fn.fnamemodify(path, ":t")
+
+            -- Simple cut: just store the path for later move
+            vim.g.neo_tree_cut_source = path
+            vim.g.neo_tree_operation = "cut"
+
+            -- Also copy path to clipboard for manual operations
+            vim.fn.setreg("+", path)
+
+            vim.notify("✂️  Cut: " .. filename, vim.log.levels.INFO)
+          end,
+          desc = "Cut file/folder"
+        },
+        ["p"] = {
+          function(state)
+            local node = state.tree:get_node()
+            local target_dir = node:get_id()
+
+            -- If pasting on a file, use its parent directory
+            if node.type ~= "directory" then
+              target_dir = vim.fn.fnamemodify(target_dir, ":h")
+            end
+
+            -- Check for pending cut operation
+            if vim.g.neo_tree_cut_source and vim.g.neo_tree_operation == "cut" then
+              local source = vim.g.neo_tree_cut_source
+              local filename = vim.fn.fnamemodify(source, ":t")
+              local destination = target_dir .. "/" .. filename
+
+              -- Use vim.fn.rename for simplicity (works like mv command)
+              local result = vim.fn.rename(source, destination)
+
+              if result == 0 then
+                vim.notify("📋 Moved: " .. filename, vim.log.levels.INFO)
+                -- Clear cut operation
+                vim.g.neo_tree_cut_source = nil
+                vim.g.neo_tree_operation = nil
+                -- Refresh tree
+                vim.cmd("Neotree refresh")
+              else
+                vim.notify("❌ Failed to move: " .. filename, vim.log.levels.ERROR)
+              end
+            else
+              -- No cut operation, try regular paste
+              vim.notify("ℹ️  No cut operation pending. Use 'x' to cut first.", vim.log.levels.WARN)
+            end
+          end,
+          desc = "Paste cut file"
+        },
+        ["c"] = {
+          "copy",
+          config = {
+            show_path = "relative"
+          }
+        },
+        ["m"] = {
+          "move",
+          config = {
+            show_path = "relative"
+          }
+        },
         ["q"] = "close_window",
         ["R"] = "refresh",
         ["?"] = "show_help",
         ["<"] = "prev_source",
         [">"] = "next_source",
         ["i"] = "show_file_details",
+        -- Enhanced copy-paste commands for better macOS compatibility
+        ["Y"] = {
+          function(state)
+            local node = state.tree:get_node()
+            local path = node:get_id()
+            -- Copy absolute path to system clipboard
+            vim.fn.setreg("+", path)
+            vim.notify("Copied path: " .. path, vim.log.levels.INFO)
+          end,
+          desc = "Copy absolute path to clipboard"
+        },
+        ["<leader>y"] = {
+          function(state)
+            local node = state.tree:get_node()
+            local name = node.name
+            -- Copy just the filename to system clipboard
+            vim.fn.setreg("+", name)
+            vim.notify("Copied filename: " .. name, vim.log.levels.INFO)
+          end,
+          desc = "Copy filename to clipboard"
+        },
+        -- Cancel cut operation
+        ["<Esc>"] = {
+          function(state)
+            if vim.g.neo_tree_cut_source then
+              local filename = vim.fn.fnamemodify(vim.g.neo_tree_cut_source, ":t")
+              vim.g.neo_tree_cut_source = nil
+              vim.g.neo_tree_operation = nil
+              vim.notify("🚫 Cancelled cut: " .. filename, vim.log.levels.INFO)
+            else
+              -- Default escape behavior
+              require("neo-tree.ui.inputs").cancel()
+            end
+          end,
+          desc = "Cancel cut operation or close"
+        },
+        -- Show current cut status
+        ["?"] = {
+          function(state)
+            if vim.g.neo_tree_cut_source then
+              local filename = vim.fn.fnamemodify(vim.g.neo_tree_cut_source, ":t")
+              vim.notify("✂️  Cut pending: " .. filename .. " (press 'p' to paste, ESC to cancel)", vim.log.levels.INFO)
+            else
+              -- Show default help
+              require("neo-tree.sources.filesystem.commands").show_help(state)
+            end
+          end,
+          desc = "Show help or cut status"
+        },
       }
     },
   },
