@@ -10,6 +10,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONFIG_FILE="$SCRIPT_DIR/.claude_model_config"
 AVAILABLE_MODELS=(
     "claude-sonnet-4.0"
+    "claude-sonnet-4.5"
     "claude-sonnet-3.7" 
     "gemini-2-5-pro-exp"
 )
