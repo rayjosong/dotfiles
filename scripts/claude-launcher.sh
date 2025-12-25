@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 🤖 Claude Launcher Script
-# Automatically sets up environment and launches Claude with DeepSeek API
+# Automatically sets up environment and launches Claude with a selected API provider
 
 set -e
 
@@ -21,6 +21,7 @@ command_exists() {
 
 # Fancy header using gum or fallback
 show_header() {
+  local provider_name=$1
   if command_exists gum; then
     gum style \
       --foreground 212 \
@@ -32,13 +33,13 @@ show_header() {
       --padding "2 4" \
       "🤖 Claude Launcher" \
       "" \
-      "DeepSeek API Integration"
+      "$provider_name API Integration"
   else
     echo -e "${PURPLE}"
     echo "╔════════════════════════════════════════════════╗"
     echo "║              🤖 Claude Launcher                ║"
     echo "║                                                ║"
-    echo "║            DeepSeek API Integration            ║"
+    echo "║         $provider_name API Integration         ║"
     echo "╚════════════════════════════════════════════════╝"
     echo -e "${NC}"
   fi
@@ -77,63 +78,74 @@ load_env() {
   fi
 }
 
-# Set up Claude environment
+# Set up Claude environment based on provider
 setup_claude_env() {
+  local provider=$1
   if command_exists gum; then
-    gum spin --spinner dot --title "Setting up Claude environment..." -- sleep 1
+    gum spin --spinner dot --title "Setting up $provider environment..." -- sleep 1
   else
-    echo -e "${CYAN}[INFO]${NC} Setting up Claude environment..."
+    echo -e "${CYAN}[INFO]${NC} Setting up $provider environment..."
   fi
 
-  # Map DeepSeek configuration to Anthropic variables for runtime
-  if [[ -n "$DEEPSEEK_BASE_URL" ]]; then
-    export ANTHROPIC_BASE_URL="$DEEPSEEK_BASE_URL"
-  else
-    export ANTHROPIC_BASE_URL="https://api.deepseek.com/anthropic"
+  if [[ "$provider" == "DeepSeek" ]]; then
+    # Map DeepSeek configuration to Anthropic variables for runtime
+    if [[ -n "$DEEPSEEK_BASE_URL" ]]; then
+      export ANTHROPIC_BASE_URL="$DEEPSEEK_BASE_URL"
+    else
+      export ANTHROPIC_BASE_URL="https://api.deepseek.com/anthropic"
+    fi
+
+    if [[ -n "$DEEPSEEK_API_KEY" && "$DEEPSEEK_API_KEY" != "your_deepseek_api_key_here" ]]; then
+      export ANTHROPIC_AUTH_TOKEN="$DEEPSEEK_API_KEY"
+    elif [[ -z "$ANTHROPIC_AUTH_TOKEN" ]]; then
+      if command_exists gum; then
+        ANTHROPIC_AUTH_TOKEN=$(gum input --password --placeholder "Enter your DeepSeek API key...")
+      else
+        echo -e "${YELLOW}Enter your DeepSeek API key:${NC}"
+        read -s ANTHROPIC_AUTH_TOKEN
+      fi
+      export ANTHROPIC_AUTH_TOKEN
+    fi
+    
+    export ANTHROPIC_MODEL="${DEEPSEEK_MODEL:-deepseek-chat}"
+    export ANTHROPIC_SMALL_FAST_MODEL="${DEEPSEEK_SMALL_FAST_MODEL:-deepseek-chat}"
+
+  elif [[ "$provider" == "GLM" ]]; then
+    export ANTHROPIC_BASE_URL="https://api.z.ai/api/anthropic"
+    
+    if [[ -n "$GLM_API_KEY" && "$GLM_API_KEY" != "YOUR_API_KEY" ]]; then
+      export ANTHROPIC_AUTH_TOKEN="$GLM_API_KEY"
+    elif [[ -n "$YOUR_API_KEY" && "$YOUR_API_KEY" != "YOUR_API_KEY" ]]; then
+        # Fallback for user's request
+        export ANTHROPIC_AUTH_TOKEN="$YOUR_API_KEY"
+    elif [[ -z "$ANTHROPIC_AUTH_TOKEN" ]]; then
+      if command_exists gum; then
+        ANTHROPIC_AUTH_TOKEN=$(gum input --password --placeholder "Enter your GLM API key...")
+      else
+        echo -e "${YELLOW}Enter your GLM API key:${NC}"
+        read -s ANTHROPIC_AUTH_TOKEN
+      fi
+      export ANTHROPIC_AUTH_TOKEN
+    fi
+    # You might want to set specific models for GLM if they differ
+    export ANTHROPIC_MODEL="${GLM_MODEL:-glm-4.6}"
+    export ANTHROPIC_SMALL_FAST_MODEL="${GLM_SMALL_FAST_MODEL:-glm-4.6}"
   fi
 
-  if [[ -n "$DEEPSEEK_TIMEOUT_MS" ]]; then
-    export API_TIMEOUT_MS="$DEEPSEEK_TIMEOUT_MS"
+  if [[ -n "$API_TIMEOUT_MS" ]]; then
+    export API_TIMEOUT_MS="$API_TIMEOUT_MS"
   else
     export API_TIMEOUT_MS="600000"
   fi
 
-  if [[ -n "$DEEPSEEK_MODEL" ]]; then
-    export ANTHROPIC_MODEL="$DEEPSEEK_MODEL"
-  else
-    export ANTHROPIC_MODEL="deepseek-chat"
-  fi
-
-  if [[ -n "$DEEPSEEK_SMALL_FAST_MODEL" ]]; then
-    export ANTHROPIC_SMALL_FAST_MODEL="$DEEPSEEK_SMALL_FAST_MODEL"
-  else
-    export ANTHROPIC_SMALL_FAST_MODEL="deepseek-chat"
-  fi
-
-  # Set API token from DeepSeek environment or prompt
-  if [[ -n "$DEEPSEEK_API_KEY" && "$DEEPSEEK_API_KEY" != "your_deepseek_api_key_here" ]]; then
-    export ANTHROPIC_AUTH_TOKEN="$DEEPSEEK_API_KEY"
-  elif [[ -n "$YOUR_API_KEY" && "$YOUR_API_KEY" != "your_deepseek_api_key_here" ]]; then
-    # Fallback to legacy YOUR_API_KEY for backwards compatibility
-    export ANTHROPIC_AUTH_TOKEN="$YOUR_API_KEY"
-  elif [[ -z "$ANTHROPIC_AUTH_TOKEN" ]]; then
-    if command_exists gum; then
-      ANTHROPIC_AUTH_TOKEN=$(gum input --password --placeholder "Enter your DeepSeek API key...")
-    else
-      echo -e "${YELLOW}Enter your DeepSeek API key:${NC}"
-      read -s ANTHROPIC_AUTH_TOKEN
-    fi
-    export ANTHROPIC_AUTH_TOKEN
-  fi
-
   if command_exists gum; then
-    gum style --foreground 46 "✓ Environment configured"
+    gum style --foreground 46 "✓ Environment configured for $provider"
   else
-    echo -e "${GREEN}✓ Environment configured${NC}"
+    echo -e "${GREEN}✓ Environment configured for $provider${NC}"
   fi
 }
 
-# Check account balance
+# Check account balance (DeepSeek specific)
 check_balance() {
   if [[ -z "$ANTHROPIC_AUTH_TOKEN" ]]; then
     if command_exists gum; then
@@ -155,7 +167,7 @@ check_balance() {
     -H "Authorization: Bearer $ANTHROPIC_AUTH_TOKEN" 2>/dev/null)
 
   if [[ $? -eq 0 && -n "$response" ]]; then
-    # Parse JSON response using built-in tools
+    # Parse JSON response
     local total_balance=$(echo "$response" | grep -o '"total_balance":"[^"]*"' | cut -d'"' -f4)
     local currency=$(echo "$response" | grep -o '"currency":"[^"]*"' | cut -d'"' -f4)
     local granted_balance=$(echo "$response" | grep -o '"granted_balance":"[^"]*"' | cut -d'"' -f4)
@@ -166,7 +178,7 @@ check_balance() {
         gum style --foreground 220 --bold "💰 Balance: $currency $total_balance"
         gum style --foreground 245 "   (Granted: $currency $granted_balance, Topped up: $currency $topped_up_balance)"
       else
-        echo -e "${YELLOW}💰 Balance: ${BOLD}$currency $total_balance${NC}"
+        echo -e "${YELLOW}💰 Balance: $currency $total_balance${NC}"
         echo -e "${CYAN}   (Granted: $currency $granted_balance, Topped up: $currency $topped_up_balance)${NC}"
       fi
     else
@@ -207,14 +219,16 @@ show_config() {
 
 # Launch Claude
 launch_claude() {
+  local provider_name=$1
+  shift # remove provider name from arguments
   if command_exists gum; then
     gum spin --spinner dot --title "Launching Claude..." -- sleep 1
     gum style \
       --foreground 212 \
       --bold \
-      "🚀 Starting Claude with DeepSeek API..."
+      "🚀 Starting Claude with $provider_name API..."
   else
-    echo -e "${PURPLE}🚀 Starting Claude with DeepSeek API...${NC}"
+    echo -e "${PURPLE}🚀 Starting Claude with $provider_name API...${NC}"
   fi
 
   echo ""
@@ -232,49 +246,63 @@ launch_claude() {
 # Main function
 main() {
   clear
-  show_header
+  
+  local provider
+  if command_exists gum; then
+    gum style --padding "1 0" --border normal --border-foreground 212 "🤖 Welcome to Claude Launcher"
+    echo "" # Add a newline for spacing
+    provider=$(gum choose --header "Please select your API provider" --item.foreground 240 --selected.foreground 212 "DeepSeek" "GLM")
+  else
+    echo "Choose your API provider:"
+    echo "1) DeepSeek"
+    echo "2) GLM"
+    read -p "Enter choice [1-2]: " choice
+    case $choice in
+      1) provider="DeepSeek" ;;
+      2) provider="GLM" ;;
+      *) echo "Invalid choice"; exit 1 ;;
+    esac
+  fi
 
+  # If user presses Esc or Ctrl+C in gum choose, provider will be empty
+  if [ -z "$provider" ]; then
+    echo "No provider selected. Exiting."
+    exit 0
+  fi
+
+  show_header "$provider"
   load_env
-  setup_claude_env
-  check_balance
+  setup_claude_env "$provider"
+  
+  if [[ "$provider" == "DeepSeek" ]]; then
+    check_balance
+  fi
+  
   show_config
 
   # Pass all arguments to claude
-  launch_claude "$@"
+  launch_claude "$provider" "$@"
 }
 
 # Check for help flag
 if [[ "$1" == "--help" || "$1" == "-h" ]]; then
-  show_header
+  show_header "Multi-Provider"
   echo "Usage: claude-launcher [claude options]"
   echo ""
-  echo "This script automatically:"
-  echo "  • Loads DEEPSEEK_* variables from .env file"
-  echo "  • Maps them to ANTHROPIC_* variables at runtime"
-  echo "  • Launches Claude with proper DeepSeek environment"
+  echo "This script automatically:
+  • Prompts you to choose an API provider (DeepSeek or GLM)
+  • Loads API keys from .env file (DEEPSEEK_API_KEY or GLM_API_KEY)
+  • Maps them to ANTHROPIC_* variables at runtime
+  • Launches Claude with the proper environment"
   echo ""
-  echo "Environment file locations (in order):"
-  echo "  • ./.env (current directory)"
-  echo "  • ~/.env (home directory)"
-  echo "  • ~/.config/claude/.env"
+  echo "Required .env variables:
+  DEEPSEEK_API_KEY=your_deepseek_api_key_here
+  GLM_API_KEY=your_glm_api_key_here"
   echo ""
-  echo "Required .env variables:"
-  echo "  DEEPSEEK_API_KEY=your_deepseek_api_key_here"
-  echo ""
-  echo "Optional .env variables:"
-  echo "  DEEPSEEK_BASE_URL=https://api.deepseek.com/anthropic"
-  echo "  DEEPSEEK_MODEL=deepseek-chat"
-  echo "  DEEPSEEK_SMALL_FAST_MODEL=deepseek-chat"
-  echo "  DEEPSEEK_TIMEOUT_MS=600000"
-  echo ""
-  echo "Legacy compatibility:"
-  echo "  YOUR_API_KEY=... (still supported)"
-  echo ""
-  echo "Optional: Install 'gum' for beautiful UI"
-  echo "  brew install gum"
+  echo "Optional: Install 'gum' for beautiful UI
+  brew install gum"
   exit 0
 fi
 
 # Run main function with all arguments
 main "$@"
-
