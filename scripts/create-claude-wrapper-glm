@@ -1,0 +1,115 @@
+#!/bin/bash
+# Create a new Claude Code wrapper for GLM models via Z.AI
+# Requires ANTHROPIC_AUTH_TOKEN environment variable to be set
+
+show_help() {
+    echo "Usage: create-claude-wrapper-glm <name> <model> [small-fast-model]"
+    echo ""
+    echo "Required env var:"
+    echo "  ANTHROPIC_AUTH_TOKEN - Your Z.AI API token"
+    echo ""
+    echo "Arguments:"
+    echo "  name            - Command name (e.g., ccg, ccg45)"
+    echo "  model           - GLM model (e.g., glm-4.6, glm-4.5, glm-4.5-air)"
+    echo "  small-fast-model - Optional fast model (defaults to model)"
+    echo ""
+    echo "Examples:"
+    echo "  export ANTHROPIC_AUTH_TOKEN='your-token-here'"
+    echo "  create-claude-wrapper-glm ccg glm-4.6 glm-4.5-air"
+    echo "  create-claude-wrapper-glm ccg45 glm-4.5 glm-4.5-air"
+    echo "  create-claude-wrapper-glm ccf glm-4.5-air"
+    exit 0
+}
+
+if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]] || [[ -z "$1" ]] || [[ -z "$2" ]]; then
+    show_help
+fi
+
+NAME="$1"
+MODEL="$2"
+SMALL_FAST="${3:-$2}"
+BASE_URL="${ANTHROPIC_BASE_URL:-https://api.z.ai/api/anthropic}"
+
+# Require ANTHROPIC_AUTH_TOKEN to be set
+if [[ -z "$ANTHROPIC_AUTH_TOKEN" ]]; then
+    echo "❌ Error: ANTHROPIC_AUTH_TOKEN environment variable not set"
+    echo ""
+    echo "Set it with:"
+    echo "  export ANTHROPIC_AUTH_TOKEN='your-token-here'"
+    echo ""
+    echo "Or add it to your ~/.zshrc or ~/.bashrc for persistence."
+    exit 1
+fi
+
+AUTH_TOKEN="$ANTHROPIC_AUTH_TOKEN"
+
+BIN_DIR="$HOME/.local/bin"
+WRAPPER_SCRIPT="$BIN_DIR/$NAME"
+CONFIG_DIR="$HOME/.claude-$NAME"
+
+# Get shell config file
+if [[ -n "$ZSH_VERSION" ]]; then
+    SHELL_CONFIG="$HOME/.zshrc"
+elif [[ -n "$BASH_VERSION" ]]; then
+    SHELL_CONFIG="$HOME/.bashrc"
+else
+    SHELL_CONFIG="$HOME/.profile"
+fi
+
+# Create wrapper script (use single quotes in heredoc to prevent early expansion)
+cat > "$WRAPPER_SCRIPT" << 'WRAPPER_EOF'
+#!/bin/bash
+# Claude Wrapper
+
+export ANTHROPIC_BASE_URL="__BASE_URL__"
+export ANTHROPIC_AUTH_TOKEN="__AUTH_TOKEN__"
+export ANTHROPIC_MODEL="__MODEL__"
+export ANTHROPIC_SMALL_FAST_MODEL="__SMALL_FAST__"
+export CLAUDE_HOME="__CONFIG_DIR__"
+
+mkdir -p "$CLAUDE_HOME"
+
+cat > "$CLAUDE_HOME/settings.json" << 'SETTINGS_EOF'
+{
+  "env": {
+    "ANTHROPIC_BASE_URL": "__BASE_URL__",
+    "ANTHROPIC_AUTH_TOKEN": "__AUTH_TOKEN__",
+    "ANTHROPIC_MODEL": "__MODEL__",
+    "ANTHROPIC_SMALL_FAST_MODEL": "__SMALL_FAST__"
+  }
+}
+SETTINGS_EOF
+
+echo "🚀 Starting Claude Code with __MODEL__..."
+echo "📁 Config: $CLAUDE_HOME"
+echo ""
+
+if ! command -v claude &> /dev/null; then
+    echo "❌ Error: 'claude' command not found!"
+    exit 1
+fi
+
+claude "$@"
+WRAPPER_EOF
+
+# Replace placeholders with actual values
+sed -i '' "s|__BASE_URL__|$BASE_URL|g" "$WRAPPER_SCRIPT"
+sed -i '' "s|__AUTH_TOKEN__|$AUTH_TOKEN|g" "$WRAPPER_SCRIPT"
+sed -i '' "s|__MODEL__|$MODEL|g" "$WRAPPER_SCRIPT"
+sed -i '' "s|__SMALL_FAST__|$SMALL_FAST|g" "$WRAPPER_SCRIPT"
+sed -i '' "s|__CONFIG_DIR__|$CONFIG_DIR|g" "$WRAPPER_SCRIPT"
+
+chmod +x "$WRAPPER_SCRIPT"
+
+# Add alias to shell config (if not already there)
+if ! grep -q "alias $NAME=" "$SHELL_CONFIG" 2>/dev/null; then
+    echo "" >> "$SHELL_CONFIG"
+    echo "# Claude wrapper: $NAME" >> "$SHELL_CONFIG"
+    echo "alias $NAME='$NAME'" >> "$SHELL_CONFIG"
+    echo "✅ Added alias to $SHELL_CONFIG"
+    echo "   Run 'source $SHELL_CONFIG' to use it now"
+fi
+
+echo "✅ Created wrapper: $WRAPPER_SCRIPT"
+echo "   Model: $MODEL"
+echo "   Config: $CONFIG_DIR"
