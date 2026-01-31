@@ -80,11 +80,19 @@ return {
   {
     "lewis6991/gitsigns.nvim",
     opts = {
-      update_debounce = 200, -- Debounce git updates
+      update_debounce = 300, -- Increased debounce for better performance
       max_file_length = 40000, -- Don't process very large files
       preview_config = {
         border = "none", -- Remove borders for performance
       },
+      -- Additional performance optimizations
+      watch_gitdir = {
+        follow_files = false, -- Don't follow file moves for performance
+      },
+      attach_to_untracked = false, -- Don't attach to untracked files
+      current_line_blame = false, -- Ensure blame is disabled (using blamer.nvim instead)
+      current_line_blame_formatter = false, -- Disable formatter
+      sign_priority = 1, -- Lower priority to reduce conflicts
     },
   },
 
@@ -98,4 +106,8 @@ return {
     "RRethy/vim-illuminate",
     enabled = false, -- Disable word highlighting under cursor
   },
+
+  -- Git blame performance optimization
+  -- Note: blamer.nvim is configured in git.lua to be disabled by default
+  -- Use <leader>gb to toggle git blame when needed, avoiding constant git operations
 }

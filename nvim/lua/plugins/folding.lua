@@ -23,7 +23,9 @@ return {
       end, desc = "Peek folded lines or LSP hover" },
     },
     config = function()
-      -- Set fold columns for better visual indication
+      -- nvim-ufo requires foldmethod = "expr" to work
+      vim.o.foldmethod = "expr"
+      vim.o.foldexpr = "v:lua.vim.treesitter.foldexpr()"
       vim.o.foldcolumn = '1' -- Show fold column
       vim.o.foldlevel = 99   -- High fold level (don't auto-fold on open)
       vim.o.foldlevelstart = 99

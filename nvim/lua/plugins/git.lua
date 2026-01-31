@@ -23,17 +23,49 @@ return {
     end,
   },
 
-  -- Git blame with exact NvChad configuration
+  -- Git blame - enabled by default with performance optimizations
   {
     "APZelos/blamer.nvim",
-    event = "VeryLazy",
+    event = "BufReadPost", -- Load only when actually reading a file
     config = function()
+      -- Enable by default but with performance optimizations
       vim.g.blamer_enabled = 1
-      vim.g.blamer_delay = 500
-      vim.g.blamer_template = " %s | %s "
+
+      -- Aggressive performance optimizations for faster loading
+      vim.g.blamer_delay = 100  -- Much faster delay (was 500)
+      vim.g.blamer_show_in_visual_modes = 0  -- Disable in visual mode for performance
+      vim.g.blamer_show_in_insert_modes = 0  -- Disable in insert mode for performance
+      vim.g.blamer_prefix = " "  -- Minimal prefix
+      vim.g.blamer_template = " %s "  -- Simplified template for faster rendering
+
+      -- Additional performance optimizations
+      vim.g.blamer_relative_time = 1  -- Use relative time (faster than absolute)
+      vim.g.blamer_date_format = "%m/%d"  -- Short date format
+
+      -- Smart auto-disable for performance protection
+      vim.api.nvim_create_autocmd("BufEnter", {
+        callback = function()
+          local max_filesize = 200 * 1024 -- 200 KB limit (more generous)
+          local filename = vim.api.nvim_buf_get_name(0)
+
+          -- Skip for non-files or special buffers
+          if filename == "" or vim.bo.buftype ~= "" then
+            return
+          end
+
+          local ok, stats = pcall(vim.loop.fs_stat, filename)
+          if ok and stats and stats.size > max_filesize then
+            -- Temporarily disable for this buffer only
+            vim.api.nvim_buf_set_var(0, "blamer_enabled", 0)
+          else
+            -- Re-enable for normal files
+            vim.g.blamer_enabled = 1
+          end
+        end,
+      })
     end,
     keys = {
-      { "<leader>gb", "<cmd>BlamerToggle<cr>", desc = "Git Blame" },
+      { "<leader>gb", "<cmd>BlamerToggle<cr>", desc = "Toggle Git Blame" },
     },
   },
 

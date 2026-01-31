@@ -79,7 +79,7 @@ opt.maxmempattern = 1000 -- Limit pattern memory
 -- Disable expensive features for performance
 opt.cursorcolumn = false -- Disable cursor column highlighting
 -- Note: relativenumber is already set to true above (line 16) for productivity
-opt.foldmethod = "manual" -- Disable automatic folding
+-- Note: Folding is handled by nvim-ufo in plugins/folding.lua
 
 -- File handling performance
 opt.swapfile = false -- Already disabled, but ensuring

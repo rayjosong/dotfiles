@@ -77,10 +77,10 @@ return {
             { 'Close buffers to right', '<leader>br' },
           },
 
-          -- Search & Files  
+          -- Search & Files
           ['Search & Files'] = {
-            { 'Live grep (MAIN GLOBAL SEARCH)', '<leader>fg' },
-            { 'Search word under cursor', '<leader>gf' },
+            { 'Search word under cursor (MAIN)', '<leader>fg' },
+            { 'Live grep (interactive search)', '<leader>fG' },
             { 'Find files by name', '<leader>ff' },
             { 'Find open buffers', '<leader>fb' },
             { 'Recent files', '<leader>fr' },
@@ -95,10 +95,9 @@ return {
           ['Windows'] = {
             { 'TOGGLE Zoom/Maximize window', '<leader>z' },
             { 'Same toggle function', '<C-w>z' },
-            { 'Force restore all windows', '<leader>zr' },
+            { 'Equalize window sizes', '<C-w>=' },
             { 'Cycle between windows', '<C-w>w' },
             { 'Navigate to window direction', '<C-w>h/j/k/l' },
-            { 'Equalize window sizes', '<C-w>=' },
             { 'Tmux/Vim navigation', '<C-h/j/k/l>' },
           },
 
@@ -142,7 +141,7 @@ return {
             { 'Open fold under cursor', 'zo' },
             { 'Close ALL folds', 'zM or <leader>zf' },
             { 'Open ALL folds', 'zR or <leader>zo' },
-            { 'Global word search (word under cursor)', '<leader>gf' },
+            { 'Global word search (word under cursor)', '<leader>fg' },
             { 'Fold all Go structs', '<leader>gs' },
             { 'Peek folded content', 'K' },
           },

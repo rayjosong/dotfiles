@@ -51,6 +51,9 @@ export GOPATH=$HOME/go
 export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
 go env -w GOPRIVATE="$COMPANY_GITHUB_ORG/*"
 
+# Docker Host
+export DOCKER_HOST="unix:///Users/r.ong.4/.colima/default/docker.sock" 
+
 # Bun setup
 if [[ -d "$HOME/.bun" ]]; then
   export BUN_INSTALL="$HOME/.bun"
@@ -169,6 +172,7 @@ alias ofp='cd $HOME/Library/Mobile\ Documents/iCloud\~md\~obsidian/Documents/foo
 alias ppg='cd $COMPANY_PAYMENT_GATEWAY/'
 alias pac='cd $COMPANY_APP_CONFIG/'
 alias df='cd $HOME/code/rayjosong/dotfiles/'
+alias dh='cd $COMPANY_PAYMENT_GATEWAY/..'
 
 # ----------------------------------------------------------------------------
 # Tool Aliases
@@ -188,9 +192,38 @@ alias sd="cd ~ && cd \$(find * -type d | fzf)"
 # ============================================================================
 # CUSTOM FUNCTIONS
 # ============================================================================
+# loadk8s() {
+#   [[ -f "$HOME/.local/bin/gdp-shell.sh" ]] && source "$HOME/.local/bin/gdp-shell.sh" && echo "K8s aliases loaded."
+# }
+#
+function gdp-access() {
+  eval "$(dp-devinfra destinations access --export-env-vars "$1" "$2" "$3")"
+}
+
 cz() {
     dir=$(dirname "$(fzf)") && [[ -n "$dir" ]] && z "$dir"
 }
 
 # pd-database-connector tools
 [[ -f "$COMPANY_FINTECH_TOOLS/pd-database-connector/init.sh" ]] && source "$COMPANY_FINTECH_TOOLS/pd-database-connector/init.sh"
+
+# bun completions
+[ -s "/Users/r.ong.4/.bun/_bun" ] && source "/Users/r.ong.4/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+
+# Added by Antigravity
+export PATH="/Users/r.ong.4/.antigravity/antigravity/bin:$PATH"
+
+# Claude Code Model Switcher Aliases
+alias cc='claude'
+alias ccg='claude-glm'
+alias ccg45='claude-glm-4.5'
+alias ccf='claude-glm-fast'
+export PATH="$HOME/.nvm/versions/node/v20.19.6/bin:$PATH"
+
+# Wrapper creator
+alias ccw='create-claude-wrapper'

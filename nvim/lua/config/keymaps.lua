@@ -23,11 +23,9 @@ map("n", "<leader>dgl", function()
 end, { desc = "Debug: Last Go test" })
 
 -- ============================================================================
--- TABLE OF CONTENTS (nvim-toc) - Changed from <leader>toc to avoid conflict
+-- TABLE OF CONTENTS (nvim-toc)
 -- ============================================================================
-map("n", "<leader>mt", function()
-  require("nvim-toc").generate_md_toc("list")
-end, { desc = "Markdown: Generate TOC" })
+-- Note: <leader>mt is handled by plugins/markdown.lua
 
 -- ============================================================================
 -- GOPHER (Go utilities) - Reorganized to avoid conflicts
@@ -43,34 +41,8 @@ map("n", "<leader>gte", "<cmd>GoIfErr<CR>", { desc = "Go: Generate if err" })
 -- ============================================================================
 -- WINDOW MANAGEMENT
 -- ============================================================================
--- Note: Window maximizer keybindings are now handled by vim-maximizer plugin
+-- Note: Window maximizer keybindings are handled by vim-maximizer plugin
 -- in plugins/editor.lua: <leader>z and <C-w>z
-
--- Fallback window zoom function (if vim-maximizer doesn't work)
-local function toggle_zoom()
-  if vim.t.zoomed then
-    -- Restore: equalize all windows
-    vim.cmd("wincmd =")
-    vim.t.zoomed = false
-    print("Window restored")
-  else
-    -- Maximize: make current window full size
-    vim.cmd("wincmd |")
-    vim.cmd("wincmd _")
-    vim.t.zoomed = true
-    print("Window maximized")
-  end
-end
-
--- Alternative zoom keymap (fallback) - same key as main but capitalized
-map("n", "<leader>Z", toggle_zoom, { desc = "Zoom Window (Toggle Fallback)" })
-
--- Additional restore keymap for clarity
-map("n", "<leader>zr", function()
-  vim.cmd("wincmd =")
-  vim.t.zoomed = false
-  print("All windows restored to equal size")
-end, { desc = "Restore All Windows" })
 
 -- ============================================================================
 -- MARKS MANAGEMENT - Intuitive mark removal
@@ -113,7 +85,7 @@ map("n", "<leader>sm", "<cmd>marks<cr>", { desc = "Show all marks" })
 -- ============================================================================
 -- GIT UTILITIES
 -- ============================================================================
-map("n", "<leader>gb", "<cmd>BlamerToggle<cr>", { desc = "Git Blame" })
+-- Note: <leader>gb (Git Blame) is handled by git.lua plugin
 -- Note: <leader>gy keymap is handled by gitlinker.nvim plugin in git.lua
 
 -- ============================================================================
@@ -130,10 +102,13 @@ map("n", "<leader>zo", function() require("ufo").openAllFolds() end, { desc = "O
 map("n", "zR", function() require("ufo").openAllFolds() end, { desc = "Open all folds" })
 map("n", "zM", function() require("ufo").closeAllFolds() end, { desc = "Close all folds" })
 
--- Global word search
-map("n", "<leader>gf", function()
+-- Global word search (word under cursor)
+map("n", "<leader>fg", function()
   require("telescope.builtin").grep_string({ search = vim.fn.expand("<cword>") })
 end, { desc = "Global word search (find word under cursor)" })
+
+-- Live grep (interactive search) - also available as <leader>fG
+map("n", "<leader>fG", "<cmd>Telescope live_grep<cr>", { desc = "Live Grep (Interactive Search)" })
 
 map("n", "<leader>gs", function()
   -- Close all Go struct folds  
@@ -176,9 +151,9 @@ end, { desc = "Stop" })
 -- ============================================================================
 -- OBSIDIAN
 -- ============================================================================
-map("n", "<leader>on", ":ObsidianNew<CR>", { desc = "Creating new note" })
-map("n", "<leader>ot", ":ObsidianTemplate<CR>", { desc = "Insert template" })
-map("n", "<leader>oo", ":ObsidianOpen<CR>", { desc = "Open Obsidian in GUI" })
+-- Note: Obsidian keymaps are handled by plugins/markdown.lua:
+-- <leader>on - New note, <leader>ot - Template, <leader>oo - Open in GUI
+-- <leader>os - Search, <leader>oq - Quick Switch
 
 -- ============================================================================
 -- BUFFER NAVIGATION (Enhanced for easier tab-like behavior)
@@ -450,10 +425,10 @@ map("n", "<leader>cd", function()
 end, { desc = "Debug completion state" })
 
 -- Note: File operations (telescope), buffer management, and other core keybindings
--- are explicitly configured in plugins/telescope.lua and should work:
+-- are explicitly configured in plugins/telescope.lua and keymaps.lua:
 -- <leader>ff - Find files (fuzzy finder)
--- <leader>fg - Live grep (MAIN GLOBAL SEARCH) 🔥
--- <leader>gf - Global word search (find word under cursor)
+-- <leader>fg - Global word search (find word under cursor) 🔥
+-- <leader>fG - Live grep (interactive search)
 -- <leader>fb - Find buffers
 -- <leader>fr - Recent files
 -- <leader>, - Buffer picker (fuzzy search)
