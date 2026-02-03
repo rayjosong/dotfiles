@@ -102,10 +102,8 @@ map("n", "<leader>zo", function() require("ufo").openAllFolds() end, { desc = "O
 map("n", "zR", function() require("ufo").openAllFolds() end, { desc = "Open all folds" })
 map("n", "zM", function() require("ufo").closeAllFolds() end, { desc = "Close all folds" })
 
--- Global word search (word under cursor)
-map("n", "<leader>fg", function()
-  require("telescope.builtin").grep_string({ search = vim.fn.expand("<cword>") })
-end, { desc = "Global word search (find word under cursor)" })
+-- Live grep (interactive global search)
+map("n", "<leader>fg", "<cmd>Telescope live_grep<cr>", { desc = "Live Grep (Global Search)" })
 
 -- Live grep (interactive search) - also available as <leader>fG
 map("n", "<leader>fG", "<cmd>Telescope live_grep<cr>", { desc = "Live Grep (Interactive Search)" })
@@ -427,7 +425,7 @@ end, { desc = "Debug completion state" })
 -- Note: File operations (telescope), buffer management, and other core keybindings
 -- are explicitly configured in plugins/telescope.lua and keymaps.lua:
 -- <leader>ff - Find files (fuzzy finder)
--- <leader>fg - Global word search (find word under cursor) 🔥
+-- <leader>fg - Live grep (global search) 🔥
 -- <leader>fG - Live grep (interactive search)
 -- <leader>fb - Find buffers
 -- <leader>fr - Recent files
