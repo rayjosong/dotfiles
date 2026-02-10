@@ -8,7 +8,6 @@ return {
     cmd = { "ToggleTerm", "TermExec" },
     opts = {
       size = 20,
-      open_mapping = [[<c-\>]],
       hide_numbers = true,
       shade_filetypes = {},
       shade_terminals = true,
@@ -42,6 +41,7 @@ return {
       -- Floating terminal
       local float_term = Terminal:new({
         direction = "float",
+        id = 1,
         float_opts = {
           border = "double",
         },
@@ -51,6 +51,7 @@ return {
       -- Horizontal split terminal
       local horizontal_term = Terminal:new({
         direction = "horizontal",
+        id = 2,
         size = 15,
         hidden = true,
       })
@@ -58,6 +59,7 @@ return {
       -- Vertical split terminal
       local vertical_term = Terminal:new({
         direction = "vertical",
+        id = 3,
         size = vim.o.columns * 0.4,
         hidden = true,
       })
@@ -116,20 +118,14 @@ return {
       local keymap = vim.keymap.set
       local opts = { noremap = true, silent = true }
 
-      -- Terminal toggles
-      keymap("n", "<leader>tf", "<cmd>lua _FLOAT_TERM_TOGGLE()<CR>", opts)
-      keymap("n", "<leader>th", "<cmd>lua _HORIZONTAL_TERM_TOGGLE()<CR>", opts)
-      keymap("n", "<leader>tv", "<cmd>lua _VERTICAL_TERM_TOGGLE()<CR>", opts)
-      
+      -- Terminal toggles - <leader>te prefix (tErminal)
+      -- Work in normal mode and terminal mode for easy toggling
+      keymap({ "n", "t" }, "<leader>tef", "<cmd>lua _FLOAT_TERM_TOGGLE()<CR>", opts)
+      keymap({ "n", "t" }, "<leader>tev", "<cmd>lua _VERTICAL_TERM_TOGGLE()<CR>", opts)
+      keymap({ "n", "t" }, "<leader>teh", "<cmd>lua _HORIZONTAL_TERM_TOGGLE()<CR>", opts)
+
       -- Override the existing lazygit keybinding to use our enhanced version
       keymap("n", "<leader>gg", "<cmd>lua _LAZYGIT_TOGGLE()<CR>", opts)
-      
-      -- Quick terminal access (avoiding test conflicts)
-      keymap("n", "<leader>tm", "<cmd>ToggleTerm<CR>", opts) -- tm = terminal main
-      keymap("n", "<leader>ta", "<cmd>ToggleTermToggleAll<CR>", opts) -- ta = terminal all
-      
-      -- Send selection to terminal (using different key to avoid test conflict)
-      keymap("v", "<leader>tx", ":ToggleTermSendVisualSelection<CR>", opts) -- tx = terminal execute
     end,
   },
 }

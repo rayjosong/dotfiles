@@ -6,8 +6,21 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
--- Theme preference (matching your catppuccin setup)
-vim.g.lazyvim_colorscheme = "catppuccin"
+-- Theme preference - restore saved theme or default to catppuccin
+-- This must happen early so LazyVim uses the saved theme
+local theme_file = vim.fn.stdpath("state") .. "/colorscheme"
+local file = io.open(theme_file, "r")
+if file then
+  local saved_theme = file:read("*l"):gsub("%s+$", "") -- Trim whitespace
+  file:close()
+  if saved_theme and saved_theme ~= "" then
+    vim.g.lazyvim_colorscheme = saved_theme
+  else
+    vim.g.lazyvim_colorscheme = "catppuccin"
+  end
+else
+  vim.g.lazyvim_colorscheme = "catppuccin"
+end
 
 -- Custom vim options (preserving your NvChad preferences)
 local opt = vim.opt

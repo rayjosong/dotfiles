@@ -7,6 +7,24 @@
 -- Or remove existing autocmds by their group name (which is prefixed with `lazyvim_` for the defaults)
 -- e.g. vim.api.nvim_del_augroup_by_name("lazyvim_wrap_spell")
 
+-- ============================================================================
+-- COLORSCHEME HANDLING
+-- ============================================================================
+-- Note: Theme persistence is handled in lua/config/options.lua
+-- by reading the saved theme and setting vim.g.lazyvim_colorscheme
+
+-- Update lualine theme when colorscheme changes
+vim.api.nvim_create_autocmd("ColorScheme", {
+  callback = function()
+    local ok, lualine = pcall(require, "lualine")
+    if ok then
+      -- Refresh lualine to pick up the new colorscheme
+      lualine.refresh()
+    end
+  end,
+  desc = "Update lualine theme when colorscheme changes",
+})
+
 -- Format on save using LazyVim's format function
 -- This integrates properly with LazyVim's conform.nvim setup
 vim.api.nvim_create_autocmd("BufWritePre", {

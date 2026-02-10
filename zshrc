@@ -204,6 +204,79 @@ cz() {
     dir=$(dirname "$(fzf)") && [[ -n "$dir" ]] && z "$dir"
 }
 
+# ----------------------------------------------------------------------------
+# Notification helper for long-running commands
+# Uses terminal-notifier for rich notifications on macOS
+# Usage: notify [title] [message] [sound]
+# Example: long-command && notify "Build complete" "Success!"
+# Or add to any command: make build; notify
+# ----------------------------------------------------------------------------
+notify() {
+  local title="${1:-Command finished}"
+  local message="${2:-Terminal}"
+  local sound="${3:-default}"
+
+  # Detect if running in tmux
+  if [[ -n "$TMUX" ]]; then
+    # In tmux: flash the pane and show status message
+    tmux display-message -p "#S:#W" > /dev/null  # Trigger activity if unfocused
+  fi
+
+  # macOS system notification using terminal-notifier (richer features)
+  if command -v terminal-notifier &> /dev/null; then
+    # Get current terminal app name for proper sender/grouping
+    local terminal_app="com.googlecode.iterm2"
+    if [[ "$TERM_PROGRAM" == "Apple_Terminal" ]]; then
+      terminal_app="com.apple.Terminal"
+    elif [[ "$TERM_PROGRAM" == "iTerm.app" ]]; then
+      terminal_app="com.googlecode.iterm2"
+    elif [[ "$KITTY_WINDOW_ID" != "" ]]; then
+      terminal_app="net.kovidgoyal.kitty"
+    fi
+
+    # terminal-notifier with rich options:
+    # -activate: brings terminal to front when notification clicked
+    # -sender:  groups notifications with terminal app
+    # -sound:   custom sound (default, glass, ping, pop, etc.)
+    terminal-notifier \
+      -title "$title" \
+      -message "$message" \
+      -sound "$sound" \
+      -activate "$terminal_app" \
+      -sender "$terminal_app"
+  # Fallback: osascript for native macOS notifications
+  elif [[ "$OSTYPE" == "darwin"* ]]; then
+    osascript -e "display notification \"$message\" with title \"$title\" sound name \"$sound\""
+  fi
+}
+
+# ----------------------------------------------------------------------------
+# Quick notification aliases for common patterns
+# ----------------------------------------------------------------------------
+# Simple notification aliases (use after a command)
+alias nf='notify "Command finished"'              # Quick success notify
+alias nfe='notify "Command finished with error"'   # Error notify (use: cmd || nfe)
+alias nfs='notify "Command finished" "Terminal" "Glass"'   # Subtle sound
+
+# Wrapper function that runs a command and notifies when done
+# Usage: nf-wrapper sleep 10
+#        nf-wrapper make build
+nf-wrapper() {
+  local cmd_start_time=$(date +%s)
+  "$@"
+  local exit_code=$?
+  local cmd_duration=$(($(date +%s) - cmd_start_time))
+
+  if [[ $exit_code -eq 0 ]]; then
+    notify "✓ Command finished" "$* (${cmd_duration}s)" "Glass"
+  else
+    notify "✗ Command failed (exit $exit_code)" "$*" "Basso"
+  fi
+  return $exit_code
+}
+
+# ----------------------------------------------------------------------------
+
 # pd-database-connector tools
 [[ -f "$COMPANY_FINTECH_TOOLS/pd-database-connector/init.sh" ]] && source "$COMPANY_FINTECH_TOOLS/pd-database-connector/init.sh"
 
@@ -227,3 +300,6 @@ export PATH="$HOME/.nvm/versions/node/v20.19.6/bin:$PATH"
 
 # Wrapper creator
 alias ccw='create-claude-wrapper'
+
+# pd-database-connector tools
+source /Users/raymondong/code/deliveryhero/pd-fintech-tools/pd-database-connector/init.sh

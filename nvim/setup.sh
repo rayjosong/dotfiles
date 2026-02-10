@@ -178,11 +178,11 @@ install_zsh_plugins() {
 
 # Install optional tools
 install_optional_tools() {
-    log_info "Installing optional tools (lazygit, gh, deno)..."
-    
+    log_info "Installing optional tools (lazygit, gh, deno, terminal-notifier)..."
+
     case $OS in
         macos)
-            brew install lazygit gh deno
+            brew install lazygit gh deno terminal-notifier
             ;;
         ubuntu)
             sudo apt install -y lazygit gh
@@ -193,6 +193,8 @@ install_optional_tools() {
                 # Add deno to PATH
                 export PATH="$HOME/.deno/bin:$PATH"
             fi
+            # terminal-notifier is macOS only
+            log_warning "terminal-notifier is macOS only - skipping on Linux"
             ;;
         fedora)
             sudo dnf install -y lazygit gh
@@ -202,6 +204,7 @@ install_optional_tools() {
                 curl -fsSL https://deno.land/install.sh | sh
                 export PATH="$HOME/.deno/bin:$PATH"
             fi
+            log_warning "terminal-notifier is macOS only - skipping on Linux"
             ;;
         rhel)
             sudo yum install -y lazygit gh
@@ -211,9 +214,10 @@ install_optional_tools() {
                 curl -fsSL https://deno.land/install.sh | sh
                 export PATH="$HOME/.deno/bin:$PATH"
             fi
+            log_warning "terminal-notifier is macOS only - skipping on Linux"
             ;;
     esac
-    
+
     log_success "Optional tools installed"
 }
 
@@ -223,7 +227,7 @@ verify_installation() {
     
     local tools=("fd" "rg" "git" "node" "nvim")
     local go_tools=("go" "golangci-lint" "goimports" "gofumpt")
-    local optional_tools=("lazygit" "gh" "deno")
+    local optional_tools=("lazygit" "gh" "deno" "terminal-notifier")
     
     # Check core tools
     for tool in "${tools[@]}"; do

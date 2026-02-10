@@ -290,7 +290,7 @@ map("n", "<leader>vr", function()
 end, { desc = "Force responsive display refresh" })
 
 -- ============================================================================
--- DYNAMIC THEME SWITCHING
+-- DYNAMIC THEME SWITCHING (with persistence)
 -- ============================================================================
 map("n", "<leader>ct", function()
   -- Function to get all available colorschemes
@@ -395,22 +395,34 @@ map("n", "<leader>ct", function()
     if choice then
       -- Extract the actual colorscheme name (remove formatting)
       local scheme_name = choice:gsub("^[● ]*", ""):gsub(" %(current%)$", "")
-      
+
       -- Apply the colorscheme
       local ok, err = pcall(vim.cmd.colorscheme, scheme_name)
       if ok then
         vim.notify("Applied colorscheme: " .. scheme_name, vim.log.levels.INFO)
+
+        -- Persist the colorscheme choice
+        local theme_file = vim.fn.stdpath("state") .. "/colorscheme"
+        local theme_dir = vim.fn.fnamemodify(theme_file, ":h")
+        -- Ensure directory exists
+        vim.fn.mkdir(theme_dir, "p")
+        -- Write the theme name to file
+        local file = io.open(theme_file, "w")
+        if file then
+          file:write(scheme_name, "\n")
+          file:close()
+        end
       else
         vim.notify("Failed to apply colorscheme: " .. scheme_name .. "\nError: " .. tostring(err), vim.log.levels.ERROR)
       end
     end
   end)
-end, { desc = "Change colorscheme (dynamic)" })
+end, { desc = "Change colorscheme (dynamic + persistent)" })
 
 -- ============================================================================
 -- COMPLETION DEBUGGING (if needed)
 -- ============================================================================
-map("n", "<leader>cd", function()
+map("n", "<leader>cD", function()
   local cmp = require("cmp")
   if cmp.visible() then
     vim.notify("CMP is visible", vim.log.levels.INFO)
@@ -432,3 +444,33 @@ end, { desc = "Debug completion state" })
 -- <leader>, - Buffer picker (fuzzy search)
 -- <leader>e  - Focus file tree
 -- H/L - Previous/Next buffer (LazyVim default)
+
+-- ============================================================================
+-- LSP SYMBOL SEARCH - Workspace and document symbols with error handling
+-- ============================================================================
+local function telescope_symbols(picker_name, desc)
+  local ok, telescope = pcall(require, "telescope.builtin")
+  if not ok then
+    vim.notify("Telescope not available", vim.log.levels.ERROR)
+    return
+  end
+
+  -- Check if LSP is attached
+  local clients = vim.lsp.get_clients({ bufnr = 0 })
+  if #clients == 0 then
+    vim.notify("No LSP client attached. Cannot search symbols.", vim.log.levels.WARN)
+    return
+  end
+
+  telescope[picker_name]()
+end
+
+-- Document symbols (current file)
+map("n", "<leader>fs", function()
+  telescope_symbols("lsp_document_symbols", "Document Symbols")
+end, { desc = "Document Symbols (LSP)" })
+
+-- Workspace symbols (entire project)
+map("n", "<leader>fS", function()
+  telescope_symbols("lsp_workspace_symbols", "Workspace Symbols")
+end, { desc = "Workspace Symbols (LSP)" })

@@ -1,12 +1,13 @@
 -- Additional Theme Configurations
--- Cyberdream and Rose Pine themes
+-- These themes are lazy-loaded and available via <leader>ct
+-- Only the default theme (catppuccin) loads at startup for performance
 
 return {
   -- Cyberdream theme - Modern cyberpunk theme
   {
     "scottmckendry/cyberdream.nvim",
-    lazy = false,
-    priority = 1000,
+    lazy = true, -- Only load when explicitly selected
+    priority = 100, -- Lower priority than default theme
     config = function()
       require("cyberdream").setup({
         -- Enable transparent background
@@ -70,8 +71,8 @@ return {
   {
     "rose-pine/neovim",
     name = "rose-pine",
-    lazy = false, 
-    priority = 1000,
+    lazy = true, -- Only load when explicitly selected
+    priority = 100, -- Lower priority than default theme
     config = function()
       require("rose-pine").setup({
         variant = "auto", -- auto, main, moon, dawn

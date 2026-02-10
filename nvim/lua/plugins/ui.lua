@@ -116,13 +116,14 @@ return {
   -- Custom lualine configuration with proper spacing and multi-line support
   {
     "nvim-lualine/lualine.nvim",
+    event = "VeryLazy", -- Load after other plugins for proper theme detection
     opts = function(_, opts)
-      -- Only set catppuccin theme if it's loaded
-      if pcall(require, "catppuccin") then
-        opts.options = opts.options or {}
-        opts.options.theme = "catppuccin"
-      end
-      
+      -- Dynamic theme adaptation - lualine will auto-detect the colorscheme
+      -- If using a supported theme (catppuccin, tokyonight, etc.), it will use the matching theme
+      -- Otherwise falls back to auto-detection from current colorscheme
+      opts.options = opts.options or {}
+      opts.options.theme = vim.g.colors_name or "auto"
+
       -- Configure sections for better spacing and avoid overlap
       opts.sections = {
         lualine_a = { "mode" },

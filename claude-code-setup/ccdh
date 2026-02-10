@@ -1,0 +1,45 @@
+#!/bin/bash
+# Claude Wrapper - Local Proxy
+
+export ANTHROPIC_BASE_URL="http://localhost:36253"
+export ANTHROPIC_AUTH_TOKEN="cloudflare"
+export CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS="1"
+export DISABLE_TELEMETRY="1"
+export DISABLE_ERROR_REPORTING="1"
+export CLAUDE_HOME="/Users/raymondong/.claude-cc-local"
+
+mkdir -p "$CLAUDE_HOME"
+
+# Use gum to select model
+MODEL=$(gum choose \
+  "claude-sonnet-4-5-20250929" \
+  "claude-opus-4-6" \
+  "gemini-3-pro-preview" \
+  "gemini-3-flash-preview" \
+  --header "Select ANTHROPIC_MODEL:")
+
+export ANTHROPIC_MODEL="$MODEL"
+
+cat >"$CLAUDE_HOME/settings.json" <<SETTINGS_EOF
+{
+  "env": {
+    "ANTHROPIC_BASE_URL": "http://localhost:36253",
+    "ANTHROPIC_AUTH_TOKEN": "cloudflare",
+    "CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS": "1",
+    "DISABLE_TELEMETRY": "1",
+    "DISABLE_ERROR_REPORTING": "1",
+    "ANTHROPIC_MODEL": "$MODEL"
+  }
+}
+SETTINGS_EOF
+
+echo "🚀 Starting Claude Code with $MODEL..."
+echo "📁 Config: $CLAUDE_HOME"
+echo ""
+
+if ! command -v claude &>/dev/null; then
+  echo "❌ Error: 'claude' command not found!"
+  exit 1
+fi
+
+claude "$@"

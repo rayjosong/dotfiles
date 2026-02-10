@@ -212,14 +212,10 @@ return {
 
           -- Terminal Integration (NEW!)
           ['Terminal'] = {
-            { 'Quick toggle terminal', '<C-\\>' },
-            { 'Float terminal', '<leader>tf' },
-            { 'Horizontal terminal', '<leader>th' },
-            { 'Vertical terminal', '<leader>tv' },
+            { 'Float terminal (toggle)', '<leader>tef' },
+            { 'Right side terminal (toggle)', '<leader>tev' },
+            { 'Bottom terminal (toggle)', '<leader>teh' },
             { 'Enhanced LazyGit', '<leader>gg' },
-            { 'Toggle main terminal', '<leader>tm' },
-            { 'Toggle all terminals', '<leader>ta' },
-            { 'Send selection to terminal', '<leader>tx (visual)' },
             { 'Terminal: Exit insert mode', '<Esc> or jk' },
             { 'Terminal: Navigate panes', '<C-h/j/k/l>' },
           },
