@@ -84,7 +84,7 @@ return {
       local custom_linters = {
         -- Disable golangci-lint to avoid exit code 3 errors - use gopls LSP instead
         -- go = { "golangcilint" },
-        python = { "flake8" },
+        python = { "ruff" },
       }
 
       for ft, linters in pairs(custom_linters) do
@@ -101,7 +101,7 @@ return {
 
   -- Mason tool configuration (LazyVim includes Mason, but we ensure your tools are installed)
   {
-    "williamboman/mason.nvim",
+    "mason-org/mason.nvim",
     opts = function(_, opts)
       opts.ensure_installed = opts.ensure_installed or {}
       vim.list_extend(opts.ensure_installed, {
@@ -111,10 +111,16 @@ return {
         "mdformat",
         "golangci-lint",
         "markdownlint",
-        "flake8",
+        "ruff", -- Python linter/formatter (replaces flake8)
         "markdown-toc",
         "prettier",
         "black",
+        -- Python LSP and debugging
+        "pyright",
+        "debugpy",
+        -- JSON and YAML LSP servers
+        "json-lsp",
+        "yaml-language-server",
         -- Note: fd and ripgrep are installed via Homebrew, not Mason
       })
     end,

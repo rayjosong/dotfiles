@@ -87,7 +87,6 @@ return {
     "neovim/nvim-lspconfig",
     dependencies = { "SmiteshP/nvim-navic" },
     opts = function(_, opts)
-      local keys = require("lazyvim.plugins.lsp.keymaps").get()
       -- Ensure navic attaches to all LSP servers
       local on_attach = function(client, bufnr)
         if client.supports_method("textDocument/documentSymbol") then
@@ -97,7 +96,7 @@ return {
       
       -- Apply to all servers
       opts.servers = opts.servers or {}
-      local servers = { "gopls", "tsserver", "pyright", "lua_ls", "marksman", "bashls" }
+      local servers = { "gopls", "tsserver", "pyright", "lua_ls", "marksman", "bashls", "jsonls", "yamlls" }
       for _, server in ipairs(servers) do
         opts.servers[server] = opts.servers[server] or {}
         local original_on_attach = opts.servers[server].on_attach

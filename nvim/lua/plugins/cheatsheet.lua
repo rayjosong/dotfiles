@@ -87,8 +87,10 @@ return {
             { 'Search commands', '<leader>fc' },
             { 'Search help tags', '<leader>fh' },
             { 'Search keymaps', '<leader>fk' },
-            { 'Document symbols', '<leader>fs' },
-            { 'Workspace symbols', '<leader>fS' },
+            { 'Document symbols (LSP)', '<leader>ss' },
+            { 'Workspace symbols (LSP)', '<leader>sS' },
+            { 'Search and replace (word under cursor)', '<leader>sr' },
+            { 'Search and replace (empty)', '<leader>sR' },
           },
 
           -- Window Management
@@ -156,6 +158,16 @@ return {
             { 'Run nearest test', '<leader>tr' },
             { 'Toggle test summary', '<leader>ts' },
             { 'Run last test', '<leader>tl' },
+          },
+
+          -- Python Development
+          ['Python Development'] = {
+            { 'Debug Python test (nearest)', '<leader>dpt' },
+            { 'Debug Python test suite', '<leader>dps' },
+            { 'Debug Python class', '<leader>dpc' },
+            { 'Run test file', '<leader>tt' },
+            { 'Run nearest test', '<leader>tr' },
+            { 'Toggle test summary', '<leader>ts' },
           },
 
           -- Debugging & Testing

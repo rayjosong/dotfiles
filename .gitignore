@@ -1,3 +1,6 @@
 .env
 gitconfig
 .DS_store
+
+# JIRA tickets - generated markdown files
+jira-ticket/

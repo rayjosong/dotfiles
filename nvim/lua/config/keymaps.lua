@@ -446,31 +446,31 @@ end, { desc = "Debug completion state" })
 -- H/L - Previous/Next buffer (LazyVim default)
 
 -- ============================================================================
--- LSP SYMBOL SEARCH - Workspace and document symbols with error handling
+-- LSP SYMBOL SEARCH - Workspace and document symbols
 -- ============================================================================
-local function telescope_symbols(picker_name, desc)
+-- Using LazyVim convention: <leader>s prefix for LSP symbols
+-- Document symbols (current file) - LazyVim default: <leader>ss
+map("n", "<leader>ss", function()
   local ok, telescope = pcall(require, "telescope.builtin")
   if not ok then
     vim.notify("Telescope not available", vim.log.levels.ERROR)
     return
   end
+  telescope.lsp_document_symbols()
+end, { desc = "Document Symbols (LSP)" })
 
+-- Workspace symbols (entire project) - LazyVim default: <leader>sS
+map("n", "<leader>sS", function()
+  local ok, telescope = pcall(require, "telescope.builtin")
+  if not ok then
+    vim.notify("Telescope not available", vim.log.levels.ERROR)
+    return
+  end
   -- Check if LSP is attached
   local clients = vim.lsp.get_clients({ bufnr = 0 })
   if #clients == 0 then
     vim.notify("No LSP client attached. Cannot search symbols.", vim.log.levels.WARN)
     return
   end
-
-  telescope[picker_name]()
-end
-
--- Document symbols (current file)
-map("n", "<leader>fs", function()
-  telescope_symbols("lsp_document_symbols", "Document Symbols")
-end, { desc = "Document Symbols (LSP)" })
-
--- Workspace symbols (entire project)
-map("n", "<leader>fS", function()
-  telescope_symbols("lsp_workspace_symbols", "Workspace Symbols")
+  telescope.lsp_workspace_symbols()
 end, { desc = "Workspace Symbols (LSP)" })

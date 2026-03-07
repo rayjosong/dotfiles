@@ -56,24 +56,17 @@ return {
   },
 
   -- Optimize treesitter for performance
+  -- Note: Let LazyVim handle treesitter configuration to avoid module loading issues
   {
     "nvim-treesitter/nvim-treesitter",
-    opts = {
-      highlight = {
-        enable = true,
-        additional_vim_regex_highlighting = false, -- Disable vim regex highlighting
-        disable = function(lang, buf)
-          -- Disable treesitter for large files
-          local max_filesize = 100 * 1024 -- 100 KB
-          local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
-          if ok and stats and stats.size > max_filesize then
-            return true
-          end
-        end,
-      },
-      incremental_selection = { enable = false }, -- Disable incremental selection
-      indent = { enable = false }, -- Disable treesitter indent (can be slow)
-    },
+    opts = function(_, opts)
+      -- Merge with LazyVim defaults
+      opts.highlight = opts.highlight or {}
+      opts.highlight.additional_vim_regex_highlighting = false
+      opts.incremental_selection = { enable = false }
+      opts.indent = { enable = false }
+      return opts
+    end,
   },
 
   -- Optimize gitsigns for performance
@@ -98,7 +91,7 @@ return {
 
   -- Disable some LazyVim default plugins that can cause lag
   {
-    "echasnovski/mini.indentscope",
+    "nvim-mini/mini.indentscope",
     enabled = false, -- Disable indent scope animation
   },
 

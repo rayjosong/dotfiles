@@ -131,6 +131,9 @@ fi
 # Zoxide - load if available
 command -v zoxide &> /dev/null && eval "$(zoxide init zsh)"
 
+# Direnv - auto-load environment variables per directory
+command -v direnv &> /dev/null && eval "$(direnv hook zsh)"
+
 # Load history substring search if available
 if command -v brew &> /dev/null; then
   local hist_search="$(brew --prefix)/share/zsh-history-substring-search/zsh-history-substring-search.zsh"
@@ -291,15 +294,13 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 # Added by Antigravity
 export PATH="/Users/r.ong.4/.antigravity/antigravity/bin:$PATH"
 
-# Claude Code Model Switcher Aliases
+# Claude Code Alias
 alias cc='claude'
-alias ccg='claude-glm'
-alias ccg45='claude-glm-4.5'
-alias ccf='claude-glm-fast'
+# ccg, ccg45, ccgf available via ~/.local/bin in PATH
 export PATH="$HOME/.nvm/versions/node/v20.19.6/bin:$PATH"
 
 # Wrapper creator
-alias ccw='create-claude-wrapper'
+alias ccw='create-claude-wrapper-glm'
 
 # pd-database-connector tools
 source /Users/raymondong/code/deliveryhero/pd-fintech-tools/pd-database-connector/init.sh

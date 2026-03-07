@@ -160,7 +160,7 @@ install_go_tools() {
 # Install zsh plugins
 install_zsh_plugins() {
     log_info "Installing zsh plugins..."
-    
+
     # Install zsh-vi-mode plugin if oh-my-zsh is available
     if [[ -d "$HOME/.oh-my-zsh" ]]; then
         local plugin_dir="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-vi-mode"
@@ -173,6 +173,58 @@ install_zsh_plugins() {
         fi
     else
         log_warning "oh-my-zsh not found, skipping zsh plugins"
+    fi
+}
+
+# Install Python development environment for Neovim
+install_python_dev() {
+    log_info "Setting up Python development environment for Neovim..."
+
+    # Check if python3 is available
+    if ! command_exists python3; then
+        log_error "python3 not found. Please install Python 3 first."
+        return 1
+    fi
+
+    # NOTE: This global venv serves as a FALLBACK for Neovim's Python provider
+    # For actual development, create project-specific venvs:
+    #   cd /path/to/project
+    #   python3 -m venv .venv
+    #   .venv/bin/pip install pynvim debugpy pytest black ruff mypy
+    # Neovim will auto-detect project venvs in this priority:
+    #   1. .venv/ (highest priority - recommended)
+    #   2. venv/
+    #   3. env/
+    #   4. ~/.venvs/neovim (fallback)
+
+    local venv_path="$HOME/.venvs/neovim"
+
+    # Create virtual environment if it doesn't exist
+    if [[ ! -d "$venv_path" ]]; then
+        log_info "Creating Neovim Python virtual environment at $venv_path..."
+        python3 -m venv "$venv_path"
+        log_success "Virtual environment created"
+    else
+        log_success "Virtual environment already exists"
+    fi
+
+    # Install Python packages in the venv
+    log_info "Installing Python packages (pynvim, debugpy, pytest, black, ruff, mypy)..."
+    "$venv_path/bin/pip" install --upgrade pip > /dev/null 2>&1
+    "$venv_path/bin/pip" install \
+        pynvim \
+        debugpy \
+        pytest \
+        black \
+        ruff \
+        mypy > /dev/null 2>&1
+
+    if [[ $? -eq 0 ]]; then
+        log_success "Python packages installed in $venv_path"
+        log_info "Installed packages: pynvim, debugpy, pytest, black, flake8, mypy, ruff"
+    else
+        log_error "Failed to install Python packages"
+        return 1
     fi
 }
 
@@ -224,11 +276,11 @@ install_optional_tools() {
 # Verify installations
 verify_installation() {
     log_info "Verifying installations..."
-    
-    local tools=("fd" "rg" "git" "node" "nvim")
+
+    local tools=("fd" "rg" "git" "node" "nvim" "python3")
     local go_tools=("go" "golangci-lint" "goimports" "gofumpt")
     local optional_tools=("lazygit" "gh" "deno" "terminal-notifier")
-    
+
     # Check core tools
     for tool in "${tools[@]}"; do
         if command_exists "$tool"; then
@@ -237,7 +289,7 @@ verify_installation() {
             log_error "✗ $tool: not found"
         fi
     done
-    
+
     # Check Go tools
     export PATH=$PATH:$(go env GOPATH)/bin 2>/dev/null || true
     for tool in "${go_tools[@]}"; do
@@ -247,7 +299,7 @@ verify_installation() {
             log_warning "✗ $tool: not found (install Go tools if needed)"
         fi
     done
-    
+
     # Check optional tools
     for tool in "${optional_tools[@]}"; do
         if command_exists "$tool"; then
@@ -256,6 +308,19 @@ verify_installation() {
             log_warning "○ $tool: not found (optional)"
         fi
     done
+
+    # Check Python venv setup
+    if [[ -f "$HOME/.venvs/neovim/bin/python" ]]; then
+        log_success "✓ Neovim Python venv: $HOME/.venvs/neovim"
+        # Check if pynvim is installed
+        if "$HOME/.venvs/neovim/bin/python" -c "import pynvim" 2>/dev/null; then
+            log_success "✓ pynvim: installed"
+        else
+            log_warning "✗ pynvim: not found in venv"
+        fi
+    else
+        log_warning "○ Neovim Python venv: not set up (run option 2 or 3)"
+    fi
 }
 
 # Update shell configuration
@@ -306,12 +371,12 @@ main() {
     echo
     log_info "What would you like to install?"
     echo "1. Core tools only (fd, ripgrep, git, node, neovim)"
-    echo "2. Core + Go development tools"
-    echo "3. Everything (core + Go + optional tools)"
+    echo "2. Core + Go + Python development tools"
+    echo "3. Everything (core + Go + Python + optional tools)"
     echo "4. Verify current installation"
     echo
     read -p "Choose option (1-4): " choice
-    
+
     case $choice in
         1)
             install_package_manager
@@ -322,6 +387,7 @@ main() {
             install_package_manager
             install_core_tools
             install_go_tools
+            install_python_dev
             install_zsh_plugins
             update_shell_config
             ;;
@@ -329,6 +395,7 @@ main() {
             install_package_manager
             install_core_tools
             install_go_tools
+            install_python_dev
             install_optional_tools
             install_zsh_plugins
             update_shell_config
@@ -353,6 +420,11 @@ main() {
     echo "2. Test global search: <leader>fg"
     echo "3. Test file finding: <leader>ff"
     echo "4. Check :checkhealth for any issues"
+    echo
+    log_info "Python development:"
+    echo "  For new projects, create a project-specific venv:"
+    echo "    cd /path/to/project && python3 -m venv .venv"
+    echo "    .venv/bin/pip install pynvim debugpy pytest black ruff mypy"
     echo
     
     if [[ $choice == "2" || $choice == "3" ]]; then
