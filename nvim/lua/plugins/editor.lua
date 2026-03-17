@@ -58,6 +58,7 @@ return {
         python = { "black" },
         javascript = { "prettier" },
         typescript = { "prettier" },
+        proto = { "buf" },
       }
 
       for ft, formatters in pairs(custom_formatters) do
@@ -83,7 +84,7 @@ return {
       -- Add only essential custom linters
       local custom_linters = {
         -- Disable golangci-lint to avoid exit code 3 errors - use gopls LSP instead
-        -- go = { "golangcilint" },
+        go = {},
         python = { "ruff" },
       }
 
@@ -109,7 +110,7 @@ return {
         "goimports",
         "gofumpt",
         "mdformat",
-        "golangci-lint",
+        -- "golangci-lint", -- Disabled - use gopls LSP instead (exit code 3 errors)
         "markdownlint",
         "ruff", -- Python linter/formatter (replaces flake8)
         "markdown-toc",
@@ -121,6 +122,8 @@ return {
         -- JSON and YAML LSP servers
         "json-lsp",
         "yaml-language-server",
+        -- Protocol Buffer tools
+        "buf",
         -- Note: fd and ripgrep are installed via Homebrew, not Mason
       })
     end,

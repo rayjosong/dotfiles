@@ -136,6 +136,26 @@ return {
             { 'Reset hunk', '<leader>hr' },
           },
 
+          -- GitHub PR Review (gh-review.nvim)
+          ['GitHub Review'] = {
+            { 'Open PR (auto-detect)', '<leader>gRo' },
+            { 'Toggle Changed Files', '<leader>gRf' },
+            { 'Submit Review', '<leader>gRs' },
+            { 'Close All Buffers', '<leader>gRc' },
+            { 'Discard Pending Review', '<leader>gRd' },
+            { 'Open PR by number', ':GHReview 123' },
+          },
+
+          -- Review Navigation (in review diff buffers)
+          ['Review Navigation'] = {
+            { 'Next/prev thread', ']t / [t' },
+            { 'View thread', 'gt' },
+            { 'Preview thread (float)', 'K' },
+            { 'Add comment', 'gc' },
+            { 'Jump to file (LSP)', 'gF' },
+            { 'Open file diff', '<Enter>' },
+          },
+
           -- Code Folding (NEW!)
           ['Code Folding'] = {
             { 'Toggle fold under cursor', 'za' },
@@ -232,17 +252,6 @@ return {
             { 'Terminal: Navigate panes', '<C-h/j/k/l>' },
           },
 
-          -- Code Navigation & Structure (NEW!)
-          ['Code Navigation (Aerial)'] = {
-            { 'Toggle code outline sidebar', '<leader>ao' },
-            { 'Toggle navigation window', '<leader>ax' },
-            { 'Floating symbol outline', '<leader>al' },
-            { 'Search symbols (Telescope)', '<leader>ay' },
-            { 'Next/prev symbol', ']] / [[' },
-            { 'Next/prev function', ']f / [f' },
-            { 'Next/prev struct/class', ']c / [c' },
-            { 'Next/prev method', ']m / [m' },
-          },
 
           -- Enhanced Git Diff & Merge (NEW!)
           ['Git Diff & Merge (Diffview)'] = {

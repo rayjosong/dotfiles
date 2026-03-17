@@ -31,6 +31,18 @@ return {
           return false
         end,
       },
+      -- Custom capabilities (new format)
+      servers = {
+        ["*"] = {
+          capabilities = vim.tbl_deep_extend("force", opts.capabilities or {}, {
+            workspace = {
+              didChangeWatchedFiles = {
+                dynamicRegistration = true,
+              },
+            },
+          }),
+        },
+      },
       -- Global LSP settings for performance
       diagnostics = {
         update_in_insert = false, -- Don't update diagnostics in insert mode

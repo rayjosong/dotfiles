@@ -35,7 +35,6 @@ vim.api.nvim_create_autocmd("BufWritePre", {
   end,
   desc = "Format buffer on save using LazyVim formatter",
 })
-
 -- ============================================================================
 -- RESPONSIVE DISPLAY HANDLING
 -- ============================================================================

@@ -230,11 +230,11 @@ install_python_dev() {
 
 # Install optional tools
 install_optional_tools() {
-    log_info "Installing optional tools (lazygit, gh, deno, terminal-notifier)..."
+    log_info "Installing optional tools (lazygit, gh, deno, buf, terminal-notifier)..."
 
     case $OS in
         macos)
-            brew install lazygit gh deno terminal-notifier
+            brew install lazygit gh deno buf terminal-notifier
             ;;
         ubuntu)
             sudo apt install -y lazygit gh
@@ -244,6 +244,12 @@ install_optional_tools() {
                 curl -fsSL https://deno.land/install.sh | sh
                 # Add deno to PATH
                 export PATH="$HOME/.deno/bin:$PATH"
+            fi
+            # Install buf for proto formatting
+            if ! command_exists buf; then
+                log_info "Installing Buf (Protocol Buffer tool)..."
+                curl -sSL https://github.com/bufbuild/buf/releases/latest/download/buf-$(uname -s)-$(uname -m).tar.gz | tar -xz -C /tmp
+                sudo mv /tmp/buf /usr/local/bin/buf
             fi
             # terminal-notifier is macOS only
             log_warning "terminal-notifier is macOS only - skipping on Linux"
@@ -256,6 +262,12 @@ install_optional_tools() {
                 curl -fsSL https://deno.land/install.sh | sh
                 export PATH="$HOME/.deno/bin:$PATH"
             fi
+            # Install buf for proto formatting
+            if ! command_exists buf; then
+                log_info "Installing Buf (Protocol Buffer tool)..."
+                curl -sSL https://github.com/bufbuild/buf/releases/latest/download/buf-$(uname -s)-$(uname -m).tar.gz | tar -xz -C /tmp
+                sudo mv /tmp/buf /usr/local/bin/buf
+            fi
             log_warning "terminal-notifier is macOS only - skipping on Linux"
             ;;
         rhel)
@@ -265,6 +277,12 @@ install_optional_tools() {
                 log_info "Installing Deno..."
                 curl -fsSL https://deno.land/install.sh | sh
                 export PATH="$HOME/.deno/bin:$PATH"
+            fi
+            # Install buf for proto formatting
+            if ! command_exists buf; then
+                log_info "Installing Buf (Protocol Buffer tool)..."
+                curl -sSL https://github.com/bufbuild/buf/releases/latest/download/buf-$(uname -s)-$(uname -m).tar.gz | tar -xz -C /tmp
+                sudo mv /tmp/buf /usr/local/bin/buf
             fi
             log_warning "terminal-notifier is macOS only - skipping on Linux"
             ;;
@@ -279,7 +297,7 @@ verify_installation() {
 
     local tools=("fd" "rg" "git" "node" "nvim" "python3")
     local go_tools=("go" "golangci-lint" "goimports" "gofumpt")
-    local optional_tools=("lazygit" "gh" "deno" "terminal-notifier")
+    local optional_tools=("lazygit" "gh" "deno" "buf" "terminal-notifier")
 
     # Check core tools
     for tool in "${tools[@]}"; do

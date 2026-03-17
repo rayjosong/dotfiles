@@ -10,16 +10,41 @@ export CLAUDE_HOME="/Users/raymondong/.claude-cc-local"
 
 mkdir -p "$CLAUDE_HOME"
 
-# Use gum to select model
-MODEL=$(gum choose \
+# Use gum to select model for quick/exploration tasks (Haiku tier)
+EXPLORATION_MODEL=$(gum choose \
+  "gemini-3-flash-preview" \
+  "gemini-3-pro-preview" \
   "claude-sonnet-4-5-20250929" \
   "claude-opus-4-6" \
-  "gemini-3-pro-preview" \
+  --header "Select model for quick tasks (Explore agent):")
+
+# Use gum to select model for standard planning work (Sonnet tier)
+PLANNING_MODEL=$(gum choose \
   "gemini-3-flash-preview" \
-  --header "Select ANTHROPIC_MODEL:")
+  "gemini-3-pro-preview" \
+  "claude-sonnet-4-5-20250929" \
+  "claude-opus-4-6" \
+  --header "Select model for standard tasks:")
 
-export ANTHROPIC_MODEL="$MODEL"
+# Use gum to select model for complex/execution tasks (Opus tier - triggered by 'clear context and execute')
+EXECUTION_MODEL=$(gum choose \
+  "gemini-3-flash-preview" \
+  "gemini-3-pro-preview" \
+  "claude-sonnet-4-5-20250929" \
+  "claude-opus-4-6" \
+  --header "Select model for complex tasks ('clear context and execute'):")
 
+export ANTHROPIC_MODEL="$PLANNING_MODEL"
+
+# Set tier mapping from user choices
+HAIKU_MODEL="$EXPLORATION_MODEL"
+SONNET_MODEL="$PLANNING_MODEL"
+OPUS_MODEL="$EXECUTION_MODEL"
+
+# Read permissions from shared file and create unified settings
+PERMS_FILE="$HOME/.claude-shared/permissions.json"
+
+# Create unified settings file with models + permissions
 cat >"$CLAUDE_HOME/settings.json" <<SETTINGS_EOF
 {
   "env": {
@@ -28,12 +53,20 @@ cat >"$CLAUDE_HOME/settings.json" <<SETTINGS_EOF
     "CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS": "1",
     "DISABLE_TELEMETRY": "1",
     "DISABLE_ERROR_REPORTING": "1",
-    "ANTHROPIC_MODEL": "$MODEL"
-  }
+    "ANTHROPIC_MODEL": "$PLANNING_MODEL",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "$HAIKU_MODEL",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "$SONNET_MODEL",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "$OPUS_MODEL"
+  },
+  "permissions": $(jq '.permissions' "$PERMS_FILE" 2>/dev/null || echo '{"allow":["Read(*)"],"deny":[],"ask":[]}')
 }
 SETTINGS_EOF
 
-echo "🚀 Starting Claude Code with $MODEL..."
+echo "🚀 Starting Claude Code..."
+echo "🔍 Quick tasks (Haiku):       $EXPLORATION_MODEL  (codebase exploration, simple searches)"
+echo "📋 Standard tasks (Sonnet):   $PLANNING_MODEL  (everyday coding, bug fixes)"
+echo "⚡ Complex tasks (Opus):       $EXECUTION_MODEL  (multi-file changes, architecture)"
+echo "💡 Run 'clear context and execute' to trigger Opus tier"
 echo "📁 Config: $CLAUDE_HOME"
 echo ""
 
@@ -42,4 +75,5 @@ if ! command -v claude &>/dev/null; then
   exit 1
 fi
 
-claude --settings "$HOME/.claude-shared/permissions.json" "$@"
+# Pass the unified settings file to claude
+claude --settings "$CLAUDE_HOME/settings.json" "$@"

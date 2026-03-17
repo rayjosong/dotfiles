@@ -109,24 +109,28 @@ return {
     end,
   },
 
-  -- GitHub integration with Octo (issues, PRs, reviews)
+  -- GitHub PR Review (gh-review.nvim)
+  -- Focused PR review tool using gh CLI - no LSP conflicts
+  -- No setup() required - commands register automatically
   {
-    "pwntester/octo.nvim",
-    cmd = "Octo",
-    event = "BufReadPost",
+    "gh-tui-tools/gh-review.nvim",
     dependencies = {
       "nvim-lua/plenary.nvim",
-      "nvim-telescope/telescope.nvim",
-      "nvim-tree/nvim-web-devicons",
     },
-    config = function()
-      require("octo").setup()
-    end,
     keys = {
-      { "<leader>gpr", "<cmd>Octo pr list<cr>", desc = "List PRs" },
-      { "<leader>gpl", "<cmd>Octo pr create<cr>", desc = "Create PR" },
-      { "<leader>gir", "<cmd>Octo issue list<cr>", desc = "List Issues" },
-      { "<leader>gic", "<cmd>Octo issue create<cr>", desc = "Create Issue" },
+      -- ========================================================================
+      -- Main review workflow (<leader>gR* = GitHub Review)
+      -- Capital R avoids conflicts with gh.nvim, diffview, and LazyVim defaults
+      -- ========================================================================
+      { "<leader>gRo", "<cmd>GHReview<cr>", desc = "GitHub Review: Open PR (auto-detect)" },
+      { "<leader>gRf", "<cmd>GHReviewFiles<cr>", desc = "GitHub Review: Toggle Files" },
+
+      -- ========================================================================
+      -- Review submission actions
+      -- ========================================================================
+      { "<leader>gRs", "<cmd>GHReviewSubmit<cr>", desc = "GitHub Review: Submit" },
+      { "<leader>gRc", "<cmd>GHReviewClose<cr>", desc = "GitHub Review: Close" },
+      { "<leader>gRd", "<cmd>GHReviewDiscard<cr>", desc = "GitHub Review: Discard" },
     },
   },
 
